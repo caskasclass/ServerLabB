@@ -1,0 +1,5 @@
+Un metodo che cerca tutto della traccia
+Un metodo che cerca trackId, titolo, autore, anno, durata pretty, img2
+Un metodo che cerca la img1, nome playlist, userid
+Un metodo che dato userid 
+Un metodo che cerca le playlist che hanno nel nome una determinata stringa
