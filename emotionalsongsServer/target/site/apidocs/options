@@ -1,0 +1,24 @@
+-classpath
+'/Users/lorenzo/.m2/repository/org/postgresql/postgresql/42.6.0/postgresql-42.6.0.jar:/Users/lorenzo/Desktop/Università/LaboratorioB/ESClassLibrary/dist/ESClassLibrary.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'20'
+-sourcepath
+'/Users/lorenzo/Desktop/Università/LaboratorioB/emotionalsongsServer/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2023. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/lorenzo/Desktop/Università/LaboratorioB/emotionalsongsServer/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'emotionalsongsServer 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'emotionalsongsServer 1.0-SNAPSHOT API'
