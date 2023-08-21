@@ -1,0 +1,9 @@
+SQLBuilder/SQLBuilder.class
+SQLBuilder/SQLBuilderInterface.class
+Finder/SongFinder.class
+Finder/SongFinderInterface.class
+Server/ServerInterface.class
+Finder/PlaylistFinder.class
+Server/Server.class
+Finder/AlbumFinderInterface.class
+Finder/AlbumFinder.class
