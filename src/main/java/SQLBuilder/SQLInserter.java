@@ -28,7 +28,7 @@ public class SQLInserter implements SQLInserterInterface {
 
     public SQLInserter() {
         try {
-            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/SyoData", "postgres", "5640");
+            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/EmotionalSongs", "postgres", "5640");
         } catch (SQLException e) {
             System.err.println("Database connection failed");
         }
@@ -40,7 +40,7 @@ public class SQLInserter implements SQLInserterInterface {
 
     @Override
     public void setQuery(String tablename) {
-        this.query.replace("%", tablename);
+        this. query = this.query.replace("%", tablename);
         String iColumn = "", iValues = "";
         for (int i = 0; i < columns.size(); i++) {
             if (i == columns.size() - 1) {
@@ -49,7 +49,7 @@ public class SQLInserter implements SQLInserterInterface {
                 iColumn += columns.get(i) + ", ";
             }
         }
-        this.query.replace("?", iColumn);
+        this.query = this.query.replace("?", iColumn);
         for (int i = 0; i < values.size(); i++) {
             if (i == values.size() - 1) {
                 if (isInteger(values.get(i))) {
@@ -63,7 +63,7 @@ public class SQLInserter implements SQLInserterInterface {
                 iValues += "'" + values.get(i) + "', ";
             }
         }
-        this.query.replace("!", iValues);
+        this.query = this.query.replace("!", iValues);
     }
 
     private static boolean isInteger(String s) {

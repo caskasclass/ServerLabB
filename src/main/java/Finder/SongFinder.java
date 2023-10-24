@@ -67,6 +67,7 @@ public class SongFinder implements SongFinderInterface {
                     + "join artisti on artisti.artist_id = artist_mapping_album.artist_id");
             this.dbmanager.setWhere("artisti.name = '" + this.searchCriteria[0] + "' and albums.release_date between '" + this.searchCriteria[1] + "'-01-01' AND " + this.searchCriteria[1] + "-12-31';");
         }
+        this.dbmanager.executeQuery();
         try {
             while (this.dbmanager.getRes().next()) {
                 this.trackId.add(this.dbmanager.getRes().getString("track_id"));

@@ -30,7 +30,7 @@ public class SQLFinder implements SQLFinderInterface {
 
     public SQLFinder() {
         try {
-            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/SyoData", "postgres", "5640");
+            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/EmotionalSongs", "postgres", "5640");
         } catch (SQLException e) {
             System.err.println("Database connection failed");
         }
@@ -42,10 +42,11 @@ public class SQLFinder implements SQLFinderInterface {
 
     @Override
     public void setQuery(String select, String from, String where) {
-        this.select.replace("?", select);
-        this.from.replace("?", from);
-        this.where.replace("?", where);
+        this.select = this.select.replace("?", select);
+        this.from = this.from.replace("?", from);
+        this.where = this.where.replace("?", where);
     }
+    
 
     @Override
     public void renewQuery() {
@@ -73,22 +74,26 @@ public class SQLFinder implements SQLFinderInterface {
 
     @Override
     public void setSelect(String select) {
-        this.select.replace("?", select);
+        this.select = this.select.replace("?", select);
     }
 
     @Override
     public void setFrom(String from) {
-        this.from.replace("?", from);
+        this.from = this.from.replace("?", from);
     }
 
     @Override
     public void setWhere(String where) {
-        this.where.replace("?", where);
+        this.where = this.where.replace("?", where);
     }
 
     @Override
     public ResultSet getRes() {
         return res;
+    }
+
+    public String getQuery() {
+        return this.select + this.from + this.where;
     }
 
 }

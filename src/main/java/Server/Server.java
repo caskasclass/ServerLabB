@@ -3,9 +3,13 @@ package Server;
 import java.rmi.*;
 import java.rmi.registry.*;
 import java.rmi.server.*;
+import java.sql.SQLInput;
+
 import pkg.*;
 import UserManager.*;
 import Finder.*;
+import SQLBuilder.SQLFinder;
+
 import java.util.ArrayList;
 
 /**
@@ -101,8 +105,8 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         System.out.println("Ciao");
     }
 
-    public static void main(String[] args) {
-        try {
+    public static void main(String[] args) throws RemoteException {
+        /*try {
             Server s = new Server();
             Registry r = LocateRegistry.createRegistry(PORT);
             r.rebind("SERVER", s);
@@ -110,6 +114,11 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         } catch (Exception e) {
             System.out.println("Server start failed");
             System.out.println(e.getMessage());
+        }*/
+        Server s = new Server();
+        ArrayList<String> ar = s.getTrackId("Ricordami");
+        for(int i = 0; i < ar.size(); i++) {
+            System.out.println(ar.get(i));
         }
     }
 
