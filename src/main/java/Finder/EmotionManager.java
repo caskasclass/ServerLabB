@@ -27,7 +27,7 @@ public class EmotionManager implements EmotionManagerInterface {
     
     public EmotionManager() {
         this.sqlfinder = null;
-        //this.sqlinserter = new SQLInserter();
+        this.sqlinserter = new SQLInserter();
         this.res = null;
         this.searchCriteria = null;
     }
@@ -52,7 +52,9 @@ public class EmotionManager implements EmotionManagerInterface {
         values.add(emotion.getTrack_id());
         values.add(emotion.getNote());
         values.add("" + emotion.getPunteggio());
-        //this.sqlinserter.setQuery("emozioni", column, values);
+        this.sqlinserter.setColums(column);
+        this.sqlinserter.setValues(values);
+        this.sqlinserter.setQuery("emozioni");
         this.sqlinserter.executeQuery();
     }
     

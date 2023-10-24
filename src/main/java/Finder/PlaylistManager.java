@@ -33,7 +33,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
         this.sqlfinder = null;
         this.res = null;
         this.trackId = null;
-        //this.sqlinserter = new SQLInserter();
+        this.sqlinserter = new SQLInserter();
         this.searchCriteria = null;
     }
     
@@ -85,12 +85,14 @@ public class PlaylistManager implements PlaylistManagerInterface {
         column.add("userid");
         column.add("titolo");
         column.add("track_id");
+        this.sqlinserter.setColums(column);
         ArrayList<String> values = new ArrayList<String>();
         values.add(p.getUser());
         values.add(p.getTitolo());
         for (int i = 0; i < p.getTrackList().size(); i++) {
             values.add(p.getTrackList().get(i));
-            //this.sqlinserter.setQuery("playlist", column, values);
+            this.sqlinserter.setValues(values);
+            this.sqlinserter.setQuery("playlist");
             this.sqlinserter.executeQuery();
             values.remove(values.size() - 1);
         }

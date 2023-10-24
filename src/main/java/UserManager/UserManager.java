@@ -73,7 +73,8 @@ public class UserManager implements UserManagerInterface {
         values.add(u.getCittà());
         values.add(u.getMail());
         values.add(encrypt(u.getPsw(), KEY));
-        //this.sqlinserter.setQuery("utenti_registrati", column, values);
+        this.sqlinserter.setColums(column);
+        this.sqlinserter.setValues(values);
         this.sqlinserter.executeQuery();
     }
 

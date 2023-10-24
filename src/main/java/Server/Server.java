@@ -89,7 +89,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         SongFinder sf = new SongFinder(artist, year);
         return sf.getTrackId();
     }
-
+    
     @Override
     public ArrayList<Track> gtAllTrackInformation(ArrayList<String> trackId, int begin, int end) {
         SongFinder sf = new SongFinder(trackId);

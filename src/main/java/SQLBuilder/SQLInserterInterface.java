@@ -1,5 +1,6 @@
 package SQLBuilder;
 
+import java.util.ArrayList;
 
 /**
  *
@@ -12,4 +13,8 @@ public interface SQLInserterInterface {
     void setQuery(String tablename);
     
     void renewQuery();
+
+    void setColums(ArrayList<String> ar);
+
+    void setValues(ArrayList<String> ar);
 }
