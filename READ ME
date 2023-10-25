@@ -1,0 +1,8 @@
+Servizi che possono essere richiesti:
+  Ricerca brano (Arraylist tracks)
+    Visualizzare emozioni brano
+  Ricerca playlist(ArrayList playlist)
+  Creare playlist(nick, nomePlaylist, AArraylist tracks)
+  Mettere emozioni ad un brano(nick, track, emozione, note)
+  Registrazione(...)
+  

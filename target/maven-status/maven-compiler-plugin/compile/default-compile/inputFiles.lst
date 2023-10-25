@@ -1,0 +1,15 @@
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/UserManager/UserManagerInterface.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/Server/Server.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/SQLBuilder/SQLInserterInterface.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/Finder/PlaylistManagerInterface.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/SQLBuilder/SQLFinder.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/Finder/SongFinderInterface.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/SQLBuilder/SQLFinderInterface.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/Finder/PlaylistManager.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/Finder/SongFinder.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/UserManager/UserManager.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/Finder/AlbumFinderInterface.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/Finder/EmotionManager.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/SQLBuilder/SQLInserter.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/Finder/EmotionManagerInterface.java
+/Users/lorenzo/Documents/Università/LaboratorioB/esserver/src/main/java/Finder/AlbumFinder.java
