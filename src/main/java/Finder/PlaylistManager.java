@@ -70,9 +70,9 @@ public class PlaylistManager implements PlaylistManagerInterface {
     }
 
     @Override
-    public ArrayList<Track> getAllTrackInformation(int begin, int end) {
+    public ArrayList<Track> getAllTrackInformation(ArrayList<String> ar, int begin, int end) {
         SongFinder sf = new SongFinder(this.trackId);
-        return sf.getAllTrackInformation(begin, end);
+        return sf.getAllTrackInformation(ar, begin, end);
     }
 
     @Override

@@ -32,7 +32,7 @@ public class SongFinder implements SongFinderInterface {
         this.searchCriteria[0] = artist;
         this.searchCriteria[1] = "" + year;
     }
-    
+
     public SongFinder(ArrayList<String> trackId) {
         this.dbmanager = new SQLFinder();
         this.res = new ArrayList<Track>();
@@ -65,7 +65,9 @@ public class SongFinder implements SongFinderInterface {
                     + "join albums on tracks.album_id = albums.album_id\n"
                     + "join artist_mapping_album on albums.album_id = artist_mapping_album.album_id\n"
                     + "join artisti on artisti.artist_id = artist_mapping_album.artist_id");
-            this.dbmanager.setWhere("artisti.name = '" + this.searchCriteria[0] + "' and albums.release_date between '" + this.searchCriteria[1] + "'-01-01' AND " + this.searchCriteria[1] + "-12-31';");
+            this.dbmanager.setWhere("artisti.name = '" + this.searchCriteria[0] + "' and albums.release_date between '"
+                    + this.searchCriteria[1] + "-01-01' AND '" + this.searchCriteria[1] + "-12-31';");
+            System.out.println(this.dbmanager.getQuery());
         }
         this.dbmanager.executeQuery();
         try {
@@ -84,12 +86,13 @@ public class SongFinder implements SongFinderInterface {
     }
 
     @Override
-    public ArrayList<Track> getAllTrackInformation(int begin, int end) {
+    public ArrayList<Track> getAllTrackInformation(ArrayList<String> ar, int begin, int end) {
         this.dbmanager.renewResultSet();
+        this.trackId = ar;
         if (this.checkResult()) {
             return null;
         }
-        for (int i = begin; i < this.trackId.size() || i < end; i++) {
+        for (int i = begin; i < end; i++) {
             this.dbmanager.renewQuery();
             this.dbmanager.setSelect("DISTINCT artisti.name AS artist_name, tracks.*, albums.*");
             this.dbmanager.setFrom("tracks\n"
@@ -109,12 +112,15 @@ public class SongFinder implements SongFinderInterface {
                     String album_img0 = this.dbmanager.getRes().getString("album_img0");
                     String album_img1 = this.dbmanager.getRes().getString("album_img1");
                     String album_img2 = this.dbmanager.getRes().getString("album_img2");
-                    res.add(new Track(track_id, name, duration_ms, artist_name, album_name, album_img0, album_img1, album_img2));
+                    res.add(new Track(track_id, name, duration_ms, artist_name, album_name, album_img0, album_img1,
+                            album_img2));
                 }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
-            } catch (NullPointerException e) {
-                System.err.println(e.getMessage());
+            } catch (ArrayIndexOutOfBoundsException ei) {
+                System.err.println(ei.getMessage());
+            } catch (NullPointerException en) {
+                System.err.println(en.getMessage());
             }
         }
         return this.res;

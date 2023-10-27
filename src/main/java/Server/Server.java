@@ -79,7 +79,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     @Override
     public ArrayList<Track> getAllTrackInformation(Playlist p, int begin, int end) {
         PlaylistManager pm = new PlaylistManager(p.getTrackList());
-        return pm.getAllTrackInformation(begin, end);
+        return pm.getAllTrackInformation(p.getTrackList(), begin, end);
     }
 
     @Override
@@ -93,11 +93,11 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         SongFinder sf = new SongFinder(artist, year);
         return sf.getTrackId();
     }
-    
+
     @Override
     public ArrayList<Track> gtAllTrackInformation(ArrayList<String> trackId, int begin, int end) {
         SongFinder sf = new SongFinder(trackId);
-        return sf.getAllTrackInformation(begin, end);
+        return sf.getAllTrackInformation(trackId, begin, end);
     }
 
     @Override
@@ -106,20 +106,23 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     }
 
     public static void main(String[] args) throws RemoteException {
-        /*try {
-            Server s = new Server();
-            Registry r = LocateRegistry.createRegistry(PORT);
-            r.rebind("SERVER", s);
-            System.out.println("Server start correct");
-        } catch (Exception e) {
-            System.out.println("Server start failed");
-            System.out.println(e.getMessage());
-        }*/
+        /*
+         * try {
+         * Server s = new Server();
+         * Registry r = LocateRegistry.createRegistry(PORT);
+         * r.rebind("SERVER", s);
+         * System.out.println("Server start correct");
+         * } catch (Exception e) {
+         * System.out.println("Server start failed");
+         * System.out.println(e.getMessage());
+         * }
+         */
         Server s = new Server();
         ArrayList<String> ar = s.getTrackId("Ricordami");
-        for(int i = 0; i < ar.size(); i++) {
-            System.out.println(ar.get(i));
-        }
+        System.out.println(ar.size());
+        ArrayList<Track> ar1 = s.getAllTrackInformation(new Playlist(null, ar, null), 0, (int)(ar.size() / 2));
+        System.out.println(ar1.size());
+        System.exit(0);
     }
 
 }
