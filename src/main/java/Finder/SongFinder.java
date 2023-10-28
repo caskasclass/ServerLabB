@@ -100,7 +100,7 @@ public class SongFinder implements SongFinderInterface {
                     + "JOIN artisti ON artist_mapping_track.artist_id = artisti.artist_id\n"
                     + "JOIN artist_mapping_album ON artisti.artist_id = artist_mapping_album.artist_id\n"
                     + "JOIN albums ON artist_mapping_album.album_id = albums.album_id");
-            this.dbmanager.setWhere("tracks.track_id = '" + this.trackId.get(i) + "';");
+            this.dbmanager.setWhere("tracks.track_id = '" + this.trackId.get(i) + "' ORDER BY tracks.popolarità DESC;");
             this.dbmanager.executeQuery();
             try {
                 while (this.dbmanager.getRes().next()) {

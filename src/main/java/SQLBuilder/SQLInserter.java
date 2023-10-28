@@ -39,6 +39,12 @@ public class SQLInserter implements SQLInserterInterface {
     }
 
     @Override
+    public void updateTrackPopularity(String trackId) {
+        this.query = "UPDATE tracks SET popolarità = popolarità + 1 WHERE track_id = '" + trackId + "';";
+        this.executeQuery();
+    }
+
+    @Override
     public void setQuery(String tablename) {
         this. query = this.query.replace("%", tablename);
         String iColumn = "", iValues = "";

@@ -12,6 +12,8 @@ import SQLBuilder.SQLFinder;
 
 import java.util.ArrayList;
 
+import javax.swing.PopupFactory;
+
 /**
  *
  * @author lorenzo
@@ -79,6 +81,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     @Override
     public ArrayList<Track> getAllTrackInformation(Playlist p, int begin, int end) {
         PlaylistManager pm = new PlaylistManager(p.getTrackList());
+        new PopolarityIncreaser(p.getTrackList());
         return pm.getAllTrackInformation(p.getTrackList(), begin, end);
     }
 
@@ -97,6 +100,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     @Override
     public ArrayList<Track> gtAllTrackInformation(ArrayList<String> trackId, int begin, int end) {
         SongFinder sf = new SongFinder(trackId);
+        new PopolarityIncreaser(trackId);
         return sf.getAllTrackInformation(trackId, begin, end);
     }
 
@@ -120,7 +124,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         Server s = new Server();
         ArrayList<String> ar = s.getTrackId("Ricordami");
         System.out.println(ar.size());
-        ArrayList<Track> ar1 = s.getAllTrackInformation(new Playlist(null, ar, null), 0, (int)(ar.size() / 2));
+        ArrayList<Track> ar1 = s.getAllTrackInformation(new Playlist(null, ar, null), 0, (int) (ar.size() / 2));
         System.out.println(ar1.size());
         System.exit(0);
     }

@@ -27,7 +27,7 @@ public class UserManager implements UserManagerInterface {
 
     public UserManager() {
         this.sqlfinder = null;
-        //this.sqlinserter = new SQLInserter();
+        this.sqlinserter = new SQLInserter();
         this.searchCriteria = null;
     }
 
@@ -75,6 +75,7 @@ public class UserManager implements UserManagerInterface {
         values.add(encrypt(u.getPsw(), KEY));
         this.sqlinserter.setColums(column);
         this.sqlinserter.setValues(values);
+        this.sqlinserter.setQuery("utenti_registrati");
         this.sqlinserter.executeQuery();
     }
 
