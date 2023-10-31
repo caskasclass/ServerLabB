@@ -3,16 +3,13 @@ package Server;
 import java.rmi.*;
 import java.rmi.registry.*;
 import java.rmi.server.*;
-import java.sql.SQLInput;
 
 import pkg.*;
 import UserManager.*;
 import Finder.*;
-import SQLBuilder.SQLFinder;
 
 import java.util.ArrayList;
 
-import javax.swing.PopupFactory;
 
 /**
  *

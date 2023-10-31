@@ -4,6 +4,7 @@ SQLBuilder/SQLInserterInterface.class
 UserManager/UserManagerInterface.class
 UserManager/UserManager.class
 Finder/AlbumFinder.class
+Server/PopolarityIncreaser.class
 Finder/PlaylistManager.class
 Finder/SongFinder.class
 SQLBuilder/SQLFinder.class
