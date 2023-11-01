@@ -114,9 +114,9 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
          * }
          */
         Server s = new Server();
-        ArrayList<String> ar = s.getTrackId("Ricordami");
+        ArrayList<String> ar = s.getTrackId("Il Volo", 2016);
         System.out.println(ar.size());
-        ArrayList<Track> ar1 = s.getAllTrackInformation(ar, 0, (int) (ar.size() / 2));
+        ArrayList<Track> ar1 = s.getAllTrackInformation(ar, 0, (int) (ar.size() / (ar.size() / 2)));
         System.out.println(ar1.size());
         System.exit(0);
     }

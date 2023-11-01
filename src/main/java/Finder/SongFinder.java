@@ -77,6 +77,7 @@ public class SongFinder implements SongFinderInterface {
             this.dbmanager.setWhere("artisti.name = '" + this.searchCriteria[0] + "' and albums.release_date between '"
                     + this.searchCriteria[1] + "-01-01' AND '" + this.searchCriteria[1] + "-12-31';");
         }
+        System.out.println(this.dbmanager.getQuery());
         this.dbmanager.executeQuery(); // esecuzione della query
         try {
             while (this.dbmanager.getRes().next()) { // cicla finchè ci sono risultati
