@@ -17,4 +17,6 @@ public interface SQLInserterInterface {
     void setColums(ArrayList<String> ar);
 
     void setValues(ArrayList<String> ar);
+
+    void updateTrackPopularity(String trackId);
 }

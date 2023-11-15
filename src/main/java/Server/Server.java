@@ -3,14 +3,13 @@ package Server;
 import java.rmi.*;
 import java.rmi.registry.*;
 import java.rmi.server.*;
-import java.sql.SQLInput;
 
 import pkg.*;
 import UserManager.*;
 import Finder.*;
-import SQLBuilder.SQLFinder;
 
 import java.util.ArrayList;
+
 
 /**
  *
@@ -79,7 +78,8 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     @Override
     public ArrayList<Track> getAllTrackInformation(Playlist p, int begin, int end) {
         PlaylistManager pm = new PlaylistManager(p.getTrackList());
-        return pm.getAllTrackInformation(begin, end);
+        new PopolarityIncreaser(p.getTrackList());
+        return pm.getAllTrackInformation(p.getTrackList(), begin, end);
     }
 
     @Override
@@ -93,33 +93,32 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         SongFinder sf = new SongFinder(artist, year);
         return sf.getTrackId();
     }
-    
-    @Override
-    public ArrayList<Track> gtAllTrackInformation(ArrayList<String> trackId, int begin, int end) {
-        SongFinder sf = new SongFinder(trackId);
-        return sf.getAllTrackInformation(begin, end);
-    }
 
     @Override
-    public void ciao() {
-        System.out.println("Ciao");
+    public ArrayList<Track> getAllTrackInformation(ArrayList<String> trackId, int begin, int end) {
+        SongFinder sf = new SongFinder(trackId);
+        new PopolarityIncreaser(trackId);
+        return sf.getAllTrackInformation(trackId, begin, end);
     }
 
     public static void main(String[] args) throws RemoteException {
-        /*try {
-            Server s = new Server();
-            Registry r = LocateRegistry.createRegistry(PORT);
-            r.rebind("SERVER", s);
-            System.out.println("Server start correct");
-        } catch (Exception e) {
-            System.out.println("Server start failed");
-            System.out.println(e.getMessage());
-        }*/
+        /*
+         * try {
+         * Server s = new Server();
+         * Registry r = LocateRegistry.createRegistry(PORT);
+         * r.rebind("SERVER", s);
+         * System.out.println("Server start correct");
+         * } catch (Exception e) {
+         * System.out.println("Server start failed");
+         * System.out.println(e.getMessage());
+         * }
+         */
         Server s = new Server();
-        ArrayList<String> ar = s.getTrackId("Ricordami");
-        for(int i = 0; i < ar.size(); i++) {
-            System.out.println(ar.get(i));
-        }
+        ArrayList<String> ar = s.getTrackId("Il Volo", 2016);
+        System.out.println(ar.size());
+        ArrayList<Track> ar1 = s.getAllTrackInformation(ar, 0, (int) (ar.size() / (ar.size() / 2)));
+        System.out.println(ar1.size());
+        System.exit(0);
     }
 
 }

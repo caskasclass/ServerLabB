@@ -13,7 +13,7 @@ public interface PlaylistManagerInterface {
 
     void createPlaylist(Playlist p);
 
-    ArrayList<Track> getAllTrackInformation(int begin, int end);
+    ArrayList<Track> getAllTrackInformation(ArrayList<String> ar, int begin, int end);
 
     Playlist getPlaylist();
 
