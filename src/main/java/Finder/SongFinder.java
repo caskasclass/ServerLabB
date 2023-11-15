@@ -77,7 +77,6 @@ public class SongFinder implements SongFinderInterface {
             this.dbmanager.setWhere("artisti.name = '" + this.searchCriteria[0] + "' and albums.release_date between '"
                     + this.searchCriteria[1] + "-01-01' AND '" + this.searchCriteria[1] + "-12-31';");
         }
-        System.out.println(this.dbmanager.getQuery());
         this.dbmanager.executeQuery(); // esecuzione della query
         try {
             while (this.dbmanager.getRes().next()) { // cicla finchè ci sono risultati
@@ -97,13 +96,12 @@ public class SongFinder implements SongFinderInterface {
 
     @Override
     // ricerca di tutte le informazioni relative ad ogni trackId
-    public ArrayList<Track> getAllTrackInformation(ArrayList<String> ar, int begin, int end) { // vengono passati il
+    public ArrayList<Track> getAllTrackInformation(int begin, int end) { // vengono passati il
                                                                                                // punto da dove
                                                                                                // iniziare, il punto da
                                                                                                // dove finire e la lista
                                                                                                // di trackId
         this.dbmanager.renewResultSet();
-        this.trackId = ar; // assegnamento della lista
         if (this.checkResult()) { // se la lista è vuota viene interrotto il metodo
             return null;
         }

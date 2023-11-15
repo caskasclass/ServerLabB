@@ -81,8 +81,8 @@ public class PlaylistManager implements PlaylistManagerInterface {
     // ricerca di tutte le informazioni di una playlist (vedere
     // SongFinder.getAllTracInformation per i dettagli)
     public ArrayList<Track> getAllTrackInformation(ArrayList<String> ar, int begin, int end) {
-        SongFinder sf = new SongFinder(this.trackId);
-        return sf.getAllTrackInformation(ar, begin, end);
+        SongFinder sf = new SongFinder(ar);
+        return sf.getAllTrackInformation(begin, end);
     }
 
     @Override

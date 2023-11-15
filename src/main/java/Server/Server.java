@@ -1,15 +1,13 @@
 package Server;
 
 import java.rmi.*;
-import java.rmi.registry.*;
 import java.rmi.server.*;
-
+import java.rmi.registry.*;
 import pkg.*;
 import UserManager.*;
 import Finder.*;
 
 import java.util.ArrayList;
-
 
 /**
  *
@@ -98,27 +96,28 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     public ArrayList<Track> getAllTrackInformation(ArrayList<String> trackId, int begin, int end) {
         SongFinder sf = new SongFinder(trackId);
         new PopolarityIncreaser(trackId);
-        return sf.getAllTrackInformation(trackId, begin, end);
+        return sf.getAllTrackInformation(begin, end);
     }
 
     public static void main(String[] args) throws RemoteException {
+        try {
+            Server s = new Server();
+            Registry r = LocateRegistry.createRegistry(PORT);
+            r.rebind("SERVER", s);
+            System.out.println("Server start correct");
+        } catch (Exception e) {
+            System.out.println("Server start failed");
+            System.out.println(e.getMessage());
+        }
         /*
-         * try {
          * Server s = new Server();
-         * Registry r = LocateRegistry.createRegistry(PORT);
-         * r.rebind("SERVER", s);
-         * System.out.println("Server start correct");
-         * } catch (Exception e) {
-         * System.out.println("Server start failed");
-         * System.out.println(e.getMessage());
-         * }
+         * ArrayList<String> ar = s.getTrackId("Il Volo", 2016);
+         * System.out.println(ar.size());
+         * ArrayList<Track> ar1 = s.getAllTrackInformation(ar, 0, (int) (ar.size() /
+         * (ar.size() / 2)));
+         * System.out.println(ar1.size());
+         * System.exit(0);
          */
-        Server s = new Server();
-        ArrayList<String> ar = s.getTrackId("Il Volo", 2016);
-        System.out.println(ar.size());
-        ArrayList<Track> ar1 = s.getAllTrackInformation(ar, 0, (int) (ar.size() / (ar.size() / 2)));
-        System.out.println(ar1.size());
-        System.exit(0);
     }
 
 }
