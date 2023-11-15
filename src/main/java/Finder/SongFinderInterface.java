@@ -11,7 +11,7 @@ public interface SongFinderInterface {
 
     boolean checkResult();
 
-    ArrayList<Track> getAllTrackInformation(ArrayList<String> ar, int begin, int end);
+    ArrayList<Track> getAllTrackInformation(int begin, int end);
 
     ArrayList<String> getTrackId();
 
