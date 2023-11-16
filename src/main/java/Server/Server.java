@@ -99,12 +99,18 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         return sf.getAllTrackInformation(begin, end);
     }
 
+    @Override
+    public void ciao() {
+        System.out.println("ciao");
+    }
+
     public static void main(String[] args) throws RemoteException {
         try {
             Server s = new Server();
             Registry r = LocateRegistry.createRegistry(PORT);
             r.rebind("SERVER", s);
             System.out.println("Server start correct");
+            for(;;) {}  
         } catch (Exception e) {
             System.out.println("Server start failed");
             System.out.println(e.getMessage());

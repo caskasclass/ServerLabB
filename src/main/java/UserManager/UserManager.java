@@ -72,12 +72,12 @@ public class UserManager implements UserManagerInterface {
         column.add("password");
         ArrayList<String> values = new ArrayList<String>();
         values.add(u.getUserid());
-        values.add(u.getNome());
-        values.add(u.getCognome());
+        values.add(u.getName());
+        values.add(u.getSurname());
         values.add(u.getCf());
-        values.add(u.getIndirizzo());
+        values.add(u.getAddress());
         values.add("" + u.getCap());
-        values.add(u.getCittà());
+        values.add(u.getCity());
         values.add(u.getMail());
         values.add(encrypt(u.getPsw(), KEY)); //la password viene crittata prima di essere aggiunta
         //settaggio delle colonne e dei valori

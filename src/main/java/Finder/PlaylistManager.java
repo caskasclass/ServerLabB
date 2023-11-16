@@ -101,7 +101,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
         this.sqlinserter.setColums(column);
         ArrayList<String> values = new ArrayList<String>(); // lista che conterrà i valori delle colonne
         values.add(p.getUser());
-        values.add(p.getTitolo());
+        values.add(p.getTitle());
         for (int i = 0; i < p.getTrackList().size(); i++) { // cicla tutti i trackId presenti nella playlist
             values.add(p.getTrackList().get(i)); // prese del valore del trackId corrente ed aggiunta alla lista
             this.sqlinserter.setValues(values); // settaggio della lista dei valori
