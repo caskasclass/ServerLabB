@@ -104,6 +104,12 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         System.out.println("ciao");
     }
 
+    @Override
+    public ArrayList<String> getAllTrackId() {
+        SongFinder sf = new SongFinder();
+        return sf.getAllTrackId();
+    }
+
     public static void main(String[] args) throws RemoteException {
         try {
             Server s = new Server();

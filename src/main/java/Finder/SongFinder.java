@@ -35,6 +35,14 @@ public class SongFinder implements SongFinderInterface {
         this.searchCriteria[1] = "" + year;
     }
 
+    // costruttore in caso mi servano tutte le tracce del db
+    public SongFinder() {
+        this.dbmanager = new SQLFinder();
+        this.trackId = new ArrayList<String>();
+        this.res = new ArrayList<Track>();
+        this.searchCriteria = null; // i criteri di ricerca non sono necessari
+    }
+
     // costruttore nel caso si voglia ricercare tutte le informazioni di una lista
     // di tracce
     public SongFinder(ArrayList<String> trackId) {
@@ -55,6 +63,22 @@ public class SongFinder implements SongFinderInterface {
         this.searchCriteria = new String[2];
         this.searchCriteria[0] = artist;
         this.searchCriteria[1] = "" + year;
+    }
+
+    @Override
+    public ArrayList<String> getAllTrackId() {
+        this.dbmanager.renewQuery();
+        this.dbmanager.renewResultSet();
+        this.dbmanager.setQuery("track_id", "tracks ORDER BY popolarity DESC");
+        this.dbmanager.executeQuery();
+        try {
+            while (this.dbmanager.getRes().next()) { // cicla finchè ci sono risultati
+                this.trackId.add(this.dbmanager.getRes().getString("track_id")); // ottenimento del trackId
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return trackId;
     }
 
     @Override
@@ -97,10 +121,10 @@ public class SongFinder implements SongFinderInterface {
     @Override
     // ricerca di tutte le informazioni relative ad ogni trackId
     public ArrayList<Track> getAllTrackInformation(int begin, int end) { // vengono passati il
-                                                                                               // punto da dove
-                                                                                               // iniziare, il punto da
-                                                                                               // dove finire e la lista
-                                                                                               // di trackId
+                                                                         // punto da dove
+                                                                         // iniziare, il punto da
+                                                                         // dove finire e la lista
+                                                                         // di trackId
         this.dbmanager.renewResultSet();
         if (this.checkResult()) { // se la lista è vuota viene interrotto il metodo
             return null;

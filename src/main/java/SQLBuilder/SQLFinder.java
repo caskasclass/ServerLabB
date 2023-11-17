@@ -45,6 +45,14 @@ public class SQLFinder implements SQLFinderInterface {
         this.res = null;
     }
 
+    // settaggio dell'a query con solamente select e from
+    @Override
+    public void setQuery(String select, String from) {
+        this.select = this.select.replace("?", select);
+        this.from = this.from.replace("?", from);
+        this.where = "";
+    }
+
     // settaggio dell'a query con tutti i parametri insieme
     @Override
     public void setQuery(String select, String from, String where) {

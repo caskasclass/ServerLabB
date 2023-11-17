@@ -16,6 +16,8 @@ public interface SQLFinderInterface {
 
     void setFrom(String from);
 
+    void setQuery(String select, String from);
+
     void setQuery(String select, String from, String where);
 
     void setSelect(String select);
