@@ -73,7 +73,7 @@ public class AlbumFinder implements AlbumFinderInterface {
             this.dbmanager.setFrom("albums\n"
                     + "join artist_mapping_album on albums.album_id = artist_mapping_album.album_id"
                     + "join artisti on artist_mapping_album.artist_id = artisti.artist_id");
-            this.dbmanager.setWhere("artisti.name = '" + this.searchCriteria[0] + "' and albums.release_date between '"
+            this.dbmanager.setWhere("artists.name = '" + this.searchCriteria[0] + "' and albums.release_date between '"
                     + this.searchCriteria[1] + "'-01-01' AND " + this.searchCriteria[1] + "-12-31';");
         }
         this.dbmanager.executeQuery(); // esecuzione della query

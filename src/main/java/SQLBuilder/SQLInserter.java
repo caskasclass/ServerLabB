@@ -3,6 +3,8 @@ package SQLBuilder;
 import java.sql.*;
 import java.util.ArrayList;
 
+import pkg.Playlist;
+
 /**
  *
  * @author lorenzo
@@ -49,9 +51,19 @@ public class SQLInserter implements SQLInserterInterface {
     @Override
     public void updateTrackPopularity(String trackId) {
         // costruzione della query
-        this.query = "UPDATE tracks SET popolarità = popolarità + 1 WHERE track_id = '" + trackId + "';";
+        this.query = "UPDATE tracks SET popolarity = popolarity + 1 WHERE track_id = '" + trackId + "';";
         // esecuzione della query
         this.executeQuery();
+    }
+
+    public void updatePlaylistPopolarity(Playlist p) {
+        //costruzione della query
+        for(int i = 0; i < p.getTrackList().size(); i++) {
+            this.query = "UPDATE playlist" 
+            + "SET popolarity = popolarity + 1"
+            + "WHERE title = '" + p.getTitle() + "' AND userid = '" + p.getUser() + "' AND trackId = '" + p.getTrackList().get(i) + "'";
+            this.executeQuery();
+        }
     }
 
     // metodo per il settaggio della query
