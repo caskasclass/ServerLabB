@@ -121,15 +121,6 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
             System.out.println("Server start failed");
             System.out.println(e.getMessage());
         }
-        /*
-         * Server s = new Server();
-         * ArrayList<String> ar = s.getTrackId("Il Volo", 2016);
-         * System.out.println(ar.size());
-         * ArrayList<Track> ar1 = s.getAllTrackInformation(ar, 0, (int) (ar.size() /
-         * (ar.size() / 2)));
-         * System.out.println(ar1.size());
-         * System.exit(0);
-         */
     }
 
 }
