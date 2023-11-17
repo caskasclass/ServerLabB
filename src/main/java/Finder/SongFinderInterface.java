@@ -13,6 +13,8 @@ public interface SongFinderInterface {
 
     ArrayList<Track> getAllTrackInformation(int begin, int end);
 
+    ArrayList<String> getAllTrackId();
+
     ArrayList<String> getTrackId();
 
     void setSearchCriteria(String title);
