@@ -62,12 +62,12 @@ public class UserManager implements UserManagerInterface {
         //costruzione delle liste che contengono i nomi delle colonne ed i loro valori
         ArrayList<String> column = new ArrayList<String>();
         column.add("userid");
-        column.add("nome");
-        column.add("cognome");
+        column.add("name");
+        column.add("surname");
         column.add("cf");
-        column.add("indirizzo");
+        column.add("address");
         column.add("cap");
-        column.add("città");
+        column.add("city");
         column.add("mail");
         column.add("password");
         ArrayList<String> values = new ArrayList<String>();
@@ -83,7 +83,7 @@ public class UserManager implements UserManagerInterface {
         //settaggio delle colonne e dei valori
         this.sqlinserter.setColums(column);
         this.sqlinserter.setValues(values);
-        this.sqlinserter.setQuery("utenti_registrati"); //settaggio della query
+        this.sqlinserter.setQuery("registrated_users"); //settaggio della query
         this.sqlinserter.executeQuery(); //esecuzione della query
     }
 
@@ -96,10 +96,10 @@ public class UserManager implements UserManagerInterface {
         //se la stringa di accesso non contiene la @ si cerca per username, altrimenti per mail
         if (this.searchCriteria[0].contains("@")) {
             //costruzione della query
-            this.sqlfinder.setQuery("*", "utenti_registrati", "mail = '" + this.searchCriteria[0] + "'");
+            this.sqlfinder.setQuery("*", "registrated_users", "mail = '" + this.searchCriteria[0] + "'");
         } else {
             //costruzione della query
-            this.sqlfinder.setQuery("*", "utenti_registrati", "userid = '" + this.searchCriteria[0] + "'");
+            this.sqlfinder.setQuery("*", "registrated_users", "userid = '" + this.searchCriteria[0] + "'");
         }
         this.sqlfinder.executeQuery(); //esecuzione della query
         try {
@@ -108,12 +108,12 @@ public class UserManager implements UserManagerInterface {
                 //se la password inserita corrisponde a quella trovata decrittata, si procede con la presa degli altri valori
                 if (this.searchCriteria[1].equals(encrypt(cPassword, 26 - KEY))) {
                     String userid = this.sqlfinder.getRes().getString("userid");
-                    String nome = this.sqlfinder.getRes().getString("nome");
-                    String cognome = this.sqlfinder.getRes().getString("cognome");
+                    String nome = this.sqlfinder.getRes().getString("name");
+                    String cognome = this.sqlfinder.getRes().getString("surname");
                     String cf = this.sqlfinder.getRes().getString("cf");
-                    String indirizzo = this.sqlfinder.getRes().getString("indirizzo");
+                    String indirizzo = this.sqlfinder.getRes().getString("address");
                     int cap = this.sqlfinder.getRes().getInt("cap");
-                    String città = this.sqlfinder.getRes().getString("città");
+                    String città = this.sqlfinder.getRes().getString("city");
                     String mail = this.sqlfinder.getRes().getString("mail");
                     u = new User(userid, nome, cognome, cf, indirizzo, cap, città, mail, this.searchCriteria[1]); 
                 }

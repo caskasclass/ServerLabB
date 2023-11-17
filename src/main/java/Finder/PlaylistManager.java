@@ -62,7 +62,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
         this.sqlfinder.renewResultSet(); // rinnovamento dei risultati
         // costruzione della query
         this.sqlfinder.setQuery("track_id", "playlist",
-                "titolo = '" + this.searchCriteria[0] + "' AND userid = '" + this.searchCriteria[1] + "'");
+                "title = '" + this.searchCriteria[0] + "' AND userid = '" + this.searchCriteria[1] + "'");
         this.sqlfinder.executeQuery(); // esecuzione della query
         try {
             while (this.sqlfinder.getRes().next()) { // ciclo finchè ci sono risultati
@@ -96,7 +96,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
         ArrayList<String> column = new ArrayList<String>(); // lista che conterrà i nomi delle colonne
         // settaggio dei nomi delle colonne
         column.add("userid");
-        column.add("titolo");
+        column.add("title");
         column.add("track_id");
         this.sqlinserter.setColums(column);
         ArrayList<String> values = new ArrayList<String>(); // lista che conterrà i valori delle colonne

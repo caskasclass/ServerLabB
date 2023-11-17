@@ -13,4 +13,5 @@ SQLBuilder/SQLInserter.class
 Finder/EmotionManagerInterface.class
 Finder/PlaylistManagerInterface.class
 Server/Server.class
+Server/PlaylistPopolarityIncreaser.class
 Finder/AlbumFinderInterface.class

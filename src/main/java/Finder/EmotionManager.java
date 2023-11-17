@@ -48,11 +48,11 @@ public class EmotionManager implements EmotionManagerInterface {
         ArrayList<String> column = new ArrayList<String>(); // lista che contiene i nomi delle colonne in cui inserire i
                                                             // dati
         // settaggio dei nomi
-        column.add("emozione");
+        column.add("emotion");
         column.add("userid");
         column.add("track_id");
-        column.add("note");
-        column.add("punteggio");
+        column.add("notes");
+        column.add("points");
         ArrayList<String> values = new ArrayList<String>(); // lista che contiene i valori da inserire nelle rispettive
                                                             // colonne
         // settaggio dei valori
@@ -65,7 +65,7 @@ public class EmotionManager implements EmotionManagerInterface {
         this.sqlinserter.setColums(column);
         this.sqlinserter.setValues(values);
         // settaggio della query
-        this.sqlinserter.setQuery("emozioni"); // viene passato il nome della tabella in cui inserire
+        this.sqlinserter.setQuery("emotions"); // viene passato il nome della tabella in cui inserire
         this.sqlinserter.executeQuery(); // esecuzione della query
     }
 
@@ -75,15 +75,15 @@ public class EmotionManager implements EmotionManagerInterface {
         this.sqlfinder.renewQuery(); // rinnovamento della query
         this.sqlfinder.renewResultSet(); // rinnovamento dei risultati
         // settaggio della query
-        this.sqlfinder.setQuery("*", "emozioni", "track_id = '" + this.searchCriteria + "'");
+        this.sqlfinder.setQuery("*", "emotions", "track_id = '" + this.searchCriteria + "'");
         this.sqlfinder.executeQuery(); // esecuzione della query
         try {
             while (this.sqlfinder.getRes().next()) { // ciclo finchè ci sono risultati
-                String emozione = this.sqlfinder.getRes().getString("emozione");
+                String emozione = this.sqlfinder.getRes().getString("emotion");
                 String userid = this.sqlfinder.getRes().getString("userid");
                 String track_id = this.sqlfinder.getRes().getString("track_id");
-                String note = this.sqlfinder.getRes().getString("note");
-                byte punteggio = this.sqlfinder.getRes().getByte("punteggio");
+                String note = this.sqlfinder.getRes().getString("notes");
+                byte punteggio = this.sqlfinder.getRes().getByte("points");
                 this.res.add(new Emotion(emozione, userid, track_id, note, punteggio)); // costruzione dell'emozione ed
                                                                                         // inserimento nella lista
             }
