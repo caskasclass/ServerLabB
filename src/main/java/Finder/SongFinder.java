@@ -73,8 +73,8 @@ public class SongFinder implements SongFinderInterface {
             this.dbmanager.setFrom("tracks\n"
                     + "join albums on tracks.album_id = albums.album_id\n"
                     + "join artist_mapping_album on albums.album_id = artist_mapping_album.album_id\n"
-                    + "join artisti on artisti.artist_id = artist_mapping_album.artist_id");
-            this.dbmanager.setWhere("artisti.name = '" + this.searchCriteria[0] + "' and albums.release_date between '"
+                    + "join artists on artists.artist_id = artist_mapping_album.artist_id");
+            this.dbmanager.setWhere("artists.name = '" + this.searchCriteria[0] + "' and albums.release_date between '"
                     + this.searchCriteria[1] + "-01-01' AND '" + this.searchCriteria[1] + "-12-31';");
         }
         this.dbmanager.executeQuery(); // esecuzione della query
@@ -108,13 +108,13 @@ public class SongFinder implements SongFinderInterface {
         for (int i = begin; i < end; i++) { // scorrimento di tutti i trackId da begin a end
             this.dbmanager.renewQuery(); // rinnovamento della query
             // costruzione della query con SELECT, FROM, WHERE separati
-            this.dbmanager.setSelect("DISTINCT artisti.name AS artist_name, tracks.*, albums.*");
+            this.dbmanager.setSelect("DISTINCT artists.name AS artist_name, tracks.*, albums.*");
             this.dbmanager.setFrom("tracks\n"
                     + "JOIN artist_mapping_track ON tracks.track_id = artist_mapping_track.track_id \n"
-                    + "JOIN artisti ON artist_mapping_track.artist_id = artisti.artist_id\n"
-                    + "JOIN artist_mapping_album ON artisti.artist_id = artist_mapping_album.artist_id\n"
+                    + "JOIN artists ON artist_mapping_track.artist_id = artists.artist_id\n"
+                    + "JOIN artist_mapping_album ON artists.artist_id = artist_mapping_album.artist_id\n"
                     + "JOIN albums ON artist_mapping_album.album_id = albums.album_id");
-            this.dbmanager.setWhere("tracks.track_id = '" + this.trackId.get(i) + "' ORDER BY tracks.popolarità DESC;");
+            this.dbmanager.setWhere("tracks.track_id = '" + this.trackId.get(i) + "' ORDER BY tracks.popolarity DESC;");
             this.dbmanager.executeQuery(); // esecuzione della query
             try {
                 // ottenimento dei valori risultanti
