@@ -51,6 +51,7 @@ public class SQLFinder implements SQLFinderInterface {
         this.select = this.select.replace("?", select);
         this.from = this.from.replace("?", from);
         this.where = "";
+        System.out.println(this.getQuery());
     }
 
     // settaggio dell'a query con tutti i parametri insieme

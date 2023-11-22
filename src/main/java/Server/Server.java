@@ -6,6 +6,7 @@ import java.rmi.registry.*;
 import pkg.*;
 import UserManager.*;
 import Finder.*;
+import SQLBuilder.SQLFinder;
 
 import java.util.ArrayList;
 
@@ -95,8 +96,13 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     @Override
     public ArrayList<Track> getAllTrackInformation(ArrayList<String> trackId, int begin, int end) {
         SongFinder sf = new SongFinder(trackId);
-        new PopolarityIncreaser(trackId);
-        return sf.getAllTrackInformation(begin, end);
+        try {
+            System.setProperty("java.awt.headless", "true");
+            return sf.getAllTrackInformation(begin, end);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     @Override
@@ -111,16 +117,30 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     }
 
     public static void main(String[] args) throws RemoteException {
+
         try {
             Server s = new Server();
             Registry r = LocateRegistry.createRegistry(PORT);
             r.rebind("SERVER", s);
             System.out.println("Server start correct");
-            for(;;) {}  
+            for (;;) {
+            }
         } catch (Exception e) {
             System.out.println("Server start failed");
             System.out.println(e.getMessage());
         }
+        /*
+         * Server s = new Server();
+         * ArrayList<String> ar = s.getAllTrackId();
+         * System.out.println(ar.size());
+         * try {
+         * ArrayList<Track> ar1 = s.getAllTrackInformation(ar, 0, ar.size() - 96);
+         * System.out.println(ar1.size());
+         * } catch (Exception e) {
+         * System.out.println(e.getMessage());
+         * }
+         * System.exit(0);
+         */
     }
 
 }

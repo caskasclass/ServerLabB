@@ -69,7 +69,7 @@ public class SongFinder implements SongFinderInterface {
     public ArrayList<String> getAllTrackId() {
         this.dbmanager.renewQuery();
         this.dbmanager.renewResultSet();
-        this.dbmanager.setQuery("track_id", "tracks ORDER BY popolarity DESC LIMIT 1000");
+        this.dbmanager.setQuery("track_id", "tracks ORDER BY popolarity DESC LIMIT 100");
         this.dbmanager.executeQuery();
         try {
             while (this.dbmanager.getRes().next()) { // cicla finchè ci sono risultati
