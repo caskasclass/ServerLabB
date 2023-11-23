@@ -1,0 +1,8 @@
+pkg/ServerInterface.class
+pkg/TrackDetails.class
+pkg/Emotion.class
+pkg/Track.class
+pkg/Playlist.class
+pkg/User.class
+pkg/Album.class
+pkg/Artist.class

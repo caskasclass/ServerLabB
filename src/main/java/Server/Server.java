@@ -2,6 +2,8 @@ package Server;
 
 import java.rmi.*;
 import java.rmi.server.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.rmi.registry.*;
 import pkg.*;
 import UserManager.*;
@@ -116,6 +118,12 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         return sf.getAllTrackId();
     }
 
+    @Override
+    public ArrayList<TrackDetails> getTopTracks() {
+        SongFinder sf = new SongFinder();
+        return sf.getTopTracks();
+    }
+
     public static void main(String[] args) throws RemoteException {
 
         try {
@@ -129,18 +137,18 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
             System.out.println("Server start failed");
             System.out.println(e.getMessage());
         }
+
         /*
          * Server s = new Server();
-         * ArrayList<String> ar = s.getAllTrackId();
-         * System.out.println(ar.size());
          * try {
-         * ArrayList<Track> ar1 = s.getAllTrackInformation(ar, 0, ar.size() - 96);
+         * ArrayList<TrackDetails> ar1 = s.getTopTracks();
          * System.out.println(ar1.size());
          * } catch (Exception e) {
          * System.out.println(e.getMessage());
          * }
          * System.exit(0);
          */
+
     }
 
 }
