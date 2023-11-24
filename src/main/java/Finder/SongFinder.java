@@ -70,7 +70,7 @@ public class SongFinder implements SongFinderInterface {
     public ArrayList<String> getAllTrackId() {
         this.dbmanager.renewQuery();
         this.dbmanager.renewResultSet();
-        this.dbmanager.setQuery("track_id", "tracks ORDER BY popolarity DESC LIMIT 50");
+        this.dbmanager.setQuery("track_id", "tracks ORDER BY popolarity DESC LIMIT 20");
         this.dbmanager.executeQuery();
         try {
             while (this.dbmanager.getRes().next()) { // cicla finchè ci sono risultati
@@ -135,7 +135,7 @@ public class SongFinder implements SongFinderInterface {
             for (int i = begin; i < end; i++) {
                 Track t = new Track(null, null, 0, null, null, null, null, null);
                 this.dbmanager.renewQuery();
-                this.dbmanager.setQuery("*", "tracks", "track_id = '" + this.trackId + "';");
+                this.dbmanager.setQuery("*", "tracks", "track_id = '" + this.trackId.get(i) + "';");
                 this.dbmanager.executeQuery();
                 String album_id = "";
                 while (this.dbmanager.getRes().next()) {
@@ -143,7 +143,7 @@ public class SongFinder implements SongFinderInterface {
                     t.setTrack_id(track_id);
                     String name = this.dbmanager.getRes().getString("name");
                     t.setName(name);
-                    int duration = this.dbmanager.getRes().getInt("duration");
+                    int duration = this.dbmanager.getRes().getInt("duration_ms");
                     t.setDuration(duration);
                     album_id = this.dbmanager.getRes().getString("album_id");
                 }
