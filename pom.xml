@@ -13,10 +13,15 @@
             <artifactId>postgresql</artifactId>
             <version>42.6.0</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.esclasslibrary</groupId>
             <artifactId>esclasslibrary</artifactId>
             <version>1.3</version>
+        </dependency> -->
+        <dependency>
+            <groupId>test_jar</groupId>
+            <artifactId>demo</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
     <build>
