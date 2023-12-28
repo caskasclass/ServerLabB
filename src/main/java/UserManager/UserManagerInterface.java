@@ -1,6 +1,6 @@
 package UserManager;
 
-import pkg.User;
+import jars.User;
 
 /**
  *

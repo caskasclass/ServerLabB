@@ -1,7 +1,8 @@
 package Finder;
 
 import java.util.ArrayList;
-import pkg.Track;
+import jars.Track;
+import jars.TrackDetails;
 
 /**
  *
@@ -20,5 +21,7 @@ public interface SongFinderInterface {
     void setSearchCriteria(String title);
 
     void setSearchCriteria(String artist, int year);
+
+    ArrayList<TrackDetails> getTopTracks();
     
 }

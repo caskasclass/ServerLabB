@@ -4,8 +4,8 @@ import SQLBuilder.SQLFinder;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import pkg.Album;
-import pkg.Artist;
+import jars.Album;
+import jars.Artist;
 
 /**
  *
@@ -67,16 +67,17 @@ public class AlbumFinder implements AlbumFinderInterface {
         if (this.searchCriteria.length == 1) {
             // costruzione della query
             this.dbmanager.setQuery("album_id", "albums", "album_name = '" + this.searchCriteria[0] + "';");
+            this.dbmanager.executeQuery(); // esecuzione della query
         } else {
             // costruzione della query con SELECT, FROM, WHERE separati
-            this.dbmanager.setSelect("album_id");
+            this.dbmanager.setSelect("albums.album_id");
             this.dbmanager.setFrom("albums\n"
-                    + "JOIN artist_mapping_album on albums.album_id = artist_mapping_album.album_id"
-                    + "JOIN artists on artist_mapping_album.artist_id = artists.artist_id");
-            this.dbmanager.setWhere("artists.name = '" + this.searchCriteria[0] + "' and albums.release_date between '"
-                    + this.searchCriteria[1] + "'-01-01' AND " + this.searchCriteria[1] + "-12-31';");
+                    + "JOIN artist_mapping_album ON albums.album_id = artist_mapping_album.album_id\n"
+                    + "JOIN artists ON artist_mapping_album.artist_id = artists.artist_id");
+            this.dbmanager.setWhere("artists.name = '" + this.searchCriteria[0] + "' AND albums.release_date between '"
+                    + this.searchCriteria[1] + "-01-01' AND '" + this.searchCriteria[1] + "-12-31';");
         }
-        this.dbmanager.executeQuery(); // esecuzione della query
+        this.dbmanager.executeQuery();
         try {
             while (this.dbmanager.getRes().next()) { // ciclo finchè ci sono risultati nella query
                 String album_id = this.dbmanager.getRes().getString("album_id"); // ottenimento del valore dell'album_id
@@ -105,7 +106,7 @@ public class AlbumFinder implements AlbumFinderInterface {
         for (int i = begin; i < end; i++) { // scorrimento di tutti i trackId da begin a end
             this.dbmanager.renewQuery(); // rinnovo della query
             // costruzione della query con SELECT, FROM, WHERE separati
-            this.dbmanager.setSelect("albums.*, artist.*");
+            this.dbmanager.setSelect("albums.*, artists.*");
             this.dbmanager.setFrom("albums\n"
                     + "JOIN artist_mapping_album ON albums.album_id = artist_mapping_album.album_id\n"
                     + "JOIN artists ON artist_mapping_album.artist_id = artists.artist_id");
