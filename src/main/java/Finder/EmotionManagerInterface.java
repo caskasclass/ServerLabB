@@ -1,7 +1,7 @@
 package Finder;
 
 import java.util.ArrayList;
-import pkg.Emotion;
+import jars.Emotion;
 
 /**
  *

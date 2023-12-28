@@ -4,7 +4,7 @@ import SQLBuilder.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
-import pkg.User;
+import jars.User;
 
 /**
  *

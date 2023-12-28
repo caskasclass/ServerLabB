@@ -3,8 +3,9 @@ package Finder;
 import SQLBuilder.SQLFinder;
 import java.sql.*;
 import java.util.ArrayList;
-import pkg.Track;
-import pkg.TrackDetails;
+
+import jars.Track;
+import jars.TrackDetails;
 
 /**
  *
@@ -83,34 +84,64 @@ public class SongFinder implements SongFinderInterface {
     }
 
     @Override
-    // ricerca della lista dei trackId
-    public ArrayList<String> getTrackId() { // ricerca della lista dei trackId
-        this.dbmanager.renewQuery(); // rinnovamento della query
-        this.dbmanager.renewResultSet(); // rinnovamento dei risultati
-        // se si ha inserito solo il titolo si cerca per titolo, altrimenti si cerca per
-        // autore e anno
+    public ArrayList<String> getTrackId() {
+        this.dbmanager.renewQuery();
+        this.dbmanager.renewResultSet();
+
         if (this.searchCriteria.length == 1) {
-            // costruzione della query
             this.dbmanager.setQuery("track_id", "tracks", "name = '" + this.searchCriteria[0] + "';");
-        } else {
-            // costruzione della query con SELECT, FROM, WHERE separati
-            this.dbmanager.setSelect("track_id");
-            this.dbmanager.setFrom("tracks\n"
-                    + "JOIN albums ON tracks.album_id = albums.album_id\n"
-                    + "JOIN artist_mapping_album ON albums.album_id = artist_mapping_album.album_id\n"
-                    + "JOIN artists ON artists.artist_id = artist_mapping_album.artist_id");
-            this.dbmanager.setWhere("artists.name = '" + this.searchCriteria[0] + "' and albums.release_date between '"
-                    + this.searchCriteria[1] + "-01-01' AND '" + this.searchCriteria[1] + "-12-31';");
-        }
-        this.dbmanager.executeQuery(); // esecuzione della query
-        try {
-            while (this.dbmanager.getRes().next()) { // cicla finchè ci sono risultati
-                this.trackId.add(this.dbmanager.getRes().getString("track_id")); // ottenimento del trackId
+            this.dbmanager.executeQuery();
+            try {
+                while (this.dbmanager.getRes().next()) {
+                    this.trackId.add(this.dbmanager.getRes().getString("track_id"));
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+        } else {
+            try {
+                this.dbmanager.setQuery("artist_id", "artists", "name = '" + this.searchCriteria[0] + "';");
+                this.dbmanager.executeQuery();
+
+                String artist_id = "";
+                while (this.dbmanager.getRes().next()) {
+                    artist_id = this.dbmanager.getRes().getString("artist_id");
+                }
+
+                this.dbmanager.renewQuery();
+                this.dbmanager.setQuery("album_id", "artist_mapping_album", "artist_id = '" + artist_id + "'");
+                this.dbmanager.executeQuery();
+
+                ArrayList<String> tmp = new ArrayList<String>();
+                while (this.dbmanager.getRes().next()) {
+                    tmp.add(this.dbmanager.getRes().getString("album_id"));
+                }
+
+                for (int i = 0; i < tmp.size(); i++) {
+                    this.dbmanager.renewQuery();
+                    this.dbmanager.setQuery("release_date", "albums", "album_id = '" + tmp.get(i) + "'");
+                    this.dbmanager.executeQuery();
+
+                    while (this.dbmanager.getRes().next()) {
+                        String sdate = this.dbmanager.getRes().getString("release_date");
+                        String[] tmp2 = sdate.split("-");
+
+                        if (tmp2[0].equals(this.searchCriteria[1])) {
+                            this.dbmanager.renewQuery();
+                            this.dbmanager.setQuery("track_id", "tracks", "album_id = '" + tmp.get(i) + "'");
+                            this.dbmanager.executeQuery();
+
+                            while (this.dbmanager.getRes().next()) {
+                                this.trackId.add(this.dbmanager.getRes().getString("track_id"));
+                            }
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
         }
-        return this.trackId; // restituzione della lista
+        return this.trackId;
     }
 
     @Override
@@ -176,6 +207,7 @@ public class SongFinder implements SongFinderInterface {
         return res; // ritorno dei risultati
     }
 
+    @Override
     public ArrayList<TrackDetails> getTopTracks() {
         ArrayList<String> trackId = this.getAllTrackId();
         ArrayList<Track> tmp = this.getAllTrackInformation(0, trackId.size());

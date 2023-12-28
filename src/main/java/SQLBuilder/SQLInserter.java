@@ -3,7 +3,7 @@ package SQLBuilder;
 import java.sql.*;
 import java.util.ArrayList;
 
-import pkg.Playlist;
+import jars.Playlist;
 
 /**
  *
@@ -95,6 +95,10 @@ public class SQLInserter implements SQLInserterInterface {
             }
         }
         this.query = this.query.replace("!", iValues);
+    }
+
+    public String getQuery() {
+        return this.query;
     }
 
     // metodo per verificare se un valore sia intero o no

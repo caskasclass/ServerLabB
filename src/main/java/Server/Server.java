@@ -5,7 +5,7 @@ import java.rmi.server.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.rmi.registry.*;
-import pkg.*;
+import jars.*;
 import UserManager.*;
 import Finder.*;
 import SQLBuilder.SQLFinder;
@@ -99,12 +99,18 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     public ArrayList<Track> getAllTrackInformation(ArrayList<String> trackId, int begin, int end) {
         SongFinder sf = new SongFinder(trackId);
         try {
-            System.setProperty("java.awt.headless", "true");
+            new PopolarityIncreaser(trackId);
             return sf.getAllTrackInformation(begin, end);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public ArrayList<Playlist> getAllPlaylist() {
+        PlaylistManager pm = new PlaylistManager("", null);
+        return pm.getAllPlaylist();
     }
 
     @Override
@@ -136,15 +142,18 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         } catch (Exception e) {
             System.out.println("Server start failed");
             System.out.println(e.getMessage());
+            System.exit(0);
         }
 
         /*
          * Server s = new Server();
          * try {
-         * ArrayList<TrackDetails> ar1 = s.getTopTracks();
-         * System.out.println(ar1.size());
+         * ArrayList<Playlist> res = s.getAllPlaylist();
+         * for(int i = 0; i < res.size(); i++) {
+         * System.out.println(res.get(i).toString());
+         * }
          * } catch (Exception e) {
-         * System.out.println(e.getMessage());
+         * e.printStackTrace();
          * }
          * System.exit(0);
          */
