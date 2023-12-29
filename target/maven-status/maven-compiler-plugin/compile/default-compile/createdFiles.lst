@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-SQLBuilder\SQLFinder.class
-SQLBuilder\SQLInserter.class
-Finder\PlaylistManager.class
-SQLBuilder\SQLInserterInterface.class
-Server\PlaylistPopolarityIncreaser.class
-Finder\SongFinderInterface.class
-Server\Server.class
-UserManager\UserManager.class
-Finder\PlaylistManagerInterface.class
-Finder\AlbumFinderInterface.class
-Server\PopolarityIncreaser.class
-Finder\SongFinder.class
-SQLBuilder\SQLFinderInterface.class
-Finder\EmotionManager.class
-Finder\EmotionManagerInterface.class
-Finder\AlbumFinder.class
-UserManager\UserManagerInterface.class
-=======
 SQLBuilder/SQLFinderInterface.class
 jars/Artist.class
 jars/Playlist.class
@@ -42,4 +23,3 @@ SQLBuilder/SQLInserter.class
 Finder/EmotionManagerInterface.class
 Finder/PlaylistManagerInterface.class
 Server/Server.class
->>>>>>> f800c2b4b0de5c0ad937a43bd2de5a61b720eb0d

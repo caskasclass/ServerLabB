@@ -30,7 +30,7 @@ public interface ServerInterface extends Remote {
 
     ArrayList<Emotion> getEmotion(Track track) throws RemoteException;
 
-    Playlist getPlaylist(String title, User user) throws RemoteException;
+    Playlist getPlaylist(String title, String user) throws RemoteException;
 
     ArrayList<String> getTrackId(String title) throws RemoteException;
 

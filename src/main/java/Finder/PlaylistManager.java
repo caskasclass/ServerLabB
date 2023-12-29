@@ -23,14 +23,14 @@ public class PlaylistManager implements PlaylistManagerInterface {
     private String[] searchCriteria; // criteri di ricerca
 
     // costruttore nel caso si voglia cercare a partire da un utente ed un titolo
-    public PlaylistManager(String title, User user) {
+    public PlaylistManager(String title, String user) {
         this.sqlfinder = new SQLFinder();
         this.res = null;
         this.trackId = new ArrayList<String>();
         this.searchCriteria = new String[2]; // settaggio dei criteri a titolo della playlist e userid
         if(user != null) {
             this.searchCriteria[0] = title;
-            this.searchCriteria[1] = user.getUserid();
+            this.searchCriteria[1] = user;
         } else {
             this.searchCriteria[0] = title;
             this.searchCriteria[1] = "";
@@ -57,9 +57,9 @@ public class PlaylistManager implements PlaylistManagerInterface {
     }
 
     @Override
-    public void setSearchCriteria(String title, User user) { // nel caso si vogliano risettare i criteri di ricerca
+    public void setSearchCriteria(String title, String user) { // nel caso si vogliano risettare i criteri di ricerca
         this.searchCriteria[0] = title;
-        this.searchCriteria[1] = user.getUserid();
+        this.searchCriteria[1] = user;
     }
 
     @Override
@@ -116,7 +116,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
             values.add(p.getUser());
             values.add(p.getTitle());
             values.add(p.getTrackList().get(i)); // prese del valore del trackId corrente ed aggiunta alla lista
-            values.add(p.getImage());
+            values.add(p.getSImage());
             this.sqlinserter.renewQuery();
             this.sqlinserter.setValues(values); // settaggio della lista dei valori
             this.sqlinserter.setQuery("playlist"); // settaggio della query con nome della tabella in cui inserire
@@ -124,28 +124,59 @@ public class PlaylistManager implements PlaylistManagerInterface {
         }
     }
 
+    @Override
     public ArrayList<Playlist> getAllPlaylist() {
         try {
             ArrayList<Playlist> res = new ArrayList<Playlist>();
+            ArrayList<String[]> counted = new ArrayList<String[]>();
             this.sqlfinder.renewQuery();
+            this.sqlfinder.renewResultSet();
             this.sqlfinder.setQuery("*", "playlist");
             this.sqlfinder.executeQuery();
-            while (this.sqlfinder.getRes().next()) {
-                this.searchCriteria[0] = this.sqlfinder.getRes().getString("title");
-                this.searchCriteria[1] = this.sqlfinder.getRes().getString("userid");
+            while(this.sqlfinder.getRes().next()) {
+                this.searchCriteria = new String[] {this.sqlfinder.getRes().getString("userid"), this.sqlfinder.getRes().getString("title")};
                 String img = this.sqlfinder.getRes().getString("image");
-                this.sqlfinder.renewQuery();
-                this.sqlfinder.setQuery("track_id", "playlist",
-                        "title = '" + this.searchCriteria[0] + "' AND userid = '" + this.searchCriteria[1] + "';");
-                this.sqlfinder.executeQuery();
-                ArrayList<String> tmp = new ArrayList<String>();
-                while (this.sqlfinder.getRes().next()) {
-                    tmp.add(this.sqlfinder.getRes().getString("track_id"));
+                if(!this.contains(counted, this.searchCriteria)) {
+                    counted.add(this.searchCriteria);
+                    res.add(new Playlist(this.searchCriteria[1], this.getTrackList(this.searchCriteria[0], this.searchCriteria[1]), img, this.searchCriteria[0]));
                 }
-                res.add(new Playlist(searchCriteria[0], tmp, img, searchCriteria[1]));
             }
             return res;
         } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private boolean contains(ArrayList<String[]> ar, String[] s) {
+        for(int i = 0; i < ar.size(); i++) {
+            if(ar.get(i)[0].equals(s[0]) && ar.get(i)[1].equals(s[1])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public ArrayList<String> getTrackList(String userid, String title) {
+        try {
+            ArrayList<String> res = new ArrayList<String>();
+            SQLFinder f = new SQLFinder();
+            f.renewResultSet();
+            f.setQuery("track_id", "playlist",
+                        "title = '" + title + "' AND userid = '" + userid + "';");
+            f.executeQuery();
+            System.out.println(f.getQuery());
+            while(f.getRes().next()) {
+                res.add(f.getRes().getString("track_id"));
+            }
+            if(res.isEmpty()) {
+                return null;
+            } else {
+                return res;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

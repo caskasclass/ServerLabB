@@ -2,13 +2,10 @@ package Server;
 
 import java.rmi.*;
 import java.rmi.server.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.rmi.registry.*;
 import jars.*;
 import UserManager.*;
 import Finder.*;
-import SQLBuilder.SQLFinder;
 
 import java.util.ArrayList;
 
@@ -71,7 +68,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     }
 
     @Override
-    public Playlist getPlaylist(String title, User user) {
+    public Playlist getPlaylist(String title, String user) {
         PlaylistManager pm = new PlaylistManager(title, user);
         return pm.getPlaylist();
     }
@@ -109,7 +106,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 
     @Override
     public ArrayList<Playlist> getAllPlaylist() {
-        PlaylistManager pm = new PlaylistManager("", null);
+        PlaylistManager pm = new PlaylistManager("", "");
         return pm.getAllPlaylist();
     }
 
@@ -145,18 +142,18 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
             System.exit(0);
         }
 
-        /*
-         * Server s = new Server();
-         * try {
-         * ArrayList<Playlist> res = s.getAllPlaylist();
-         * for(int i = 0; i < res.size(); i++) {
-         * System.out.println(res.get(i).toString());
-         * }
-         * } catch (Exception e) {
-         * e.printStackTrace();
-         * }
-         * System.exit(0);
-         */
+        
+          /*Server s = new Server();
+          try {
+          ArrayList<Playlist> res = s.getAllPlaylist();
+          for (int i = 0; i < res.size(); i++) {
+          System.out.println(res.get(i).toString());
+          }
+          } catch (Exception e) {
+          e.printStackTrace();
+          }
+          System.exit(0);*/
+         
 
     }
 
