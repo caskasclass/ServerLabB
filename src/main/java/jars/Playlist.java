@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 
 /**
@@ -48,13 +47,8 @@ public class Playlist implements Serializable {
     public void setTrackList(ArrayList<String> trackList) {
         this.trackList = trackList;
     }
-    
-    public String getSImage() {
+     public String getImage() {
         return img;
-    }
-
-    public ImageView getImage() {
-        return createImageView(img);
     }
 
     public void setImage(String image) {
@@ -68,18 +62,11 @@ public class Playlist implements Serializable {
         this.user = user.getUserid();
     }
     
-    public ImageView createImageView(String imageUrl) {
-        if (imageUrl != null && !imageUrl.isEmpty()) {
-            Image image = new Image(imageUrl);
-            return new ImageView(image);
-        } else {
-            return null;
-        }
-    }
+    
 
     @Override
     public String toString() {
-        String res = this.title + "<?SEP>" + this.user + "\n";
+        String res = this.title + "<?SEP" + this.user + "\n";
         for (int i = 0; i < this.trackList.size(); i++) {
             res += this.trackList.get(i) + "<$SEP>";
         }

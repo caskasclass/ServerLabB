@@ -117,7 +117,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
             values.add(p.getUser());
             values.add(p.getTitle());
             values.add(p.getTrackList().get(i)); // prese del valore del trackId corrente ed aggiunta alla lista
-            values.add(p.getSImage());
+            values.add(p.getImage());
             this.sqlinserter.renewQuery();
             this.sqlinserter.setValues(values); // settaggio della lista dei valori
             this.sqlinserter.setQuery("playlist"); // settaggio della query con nome della tabella in cui inserire

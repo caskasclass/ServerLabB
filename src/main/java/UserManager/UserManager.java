@@ -113,9 +113,9 @@ public class UserManager implements UserManagerInterface {
                     String cf = this.sqlfinder.getRes().getString("cf");
                     String indirizzo = this.sqlfinder.getRes().getString("address");
                     int cap = this.sqlfinder.getRes().getInt("cap");
-                    String città = this.sqlfinder.getRes().getString("city");
+                    String citta = this.sqlfinder.getRes().getString("city");
                     String mail = this.sqlfinder.getRes().getString("mail");
-                    u = new User(userid, nome, cognome, cf, indirizzo, cap, città, mail, this.searchCriteria[1]); 
+                    u = new User(userid, nome, cognome, cf, indirizzo, cap, citta, mail, this.searchCriteria[1]); 
                 }
             }
         } catch (SQLException e) {
