@@ -71,7 +71,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     }
 
     @Override
-    public Playlist getPlaylist(String title, User user) {
+    public Playlist getPlaylist(String title, String user) {
         PlaylistManager pm = new PlaylistManager(title, user);
         return pm.getPlaylist();
     }
@@ -109,7 +109,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 
     @Override
     public ArrayList<Playlist> getAllPlaylist() {
-        PlaylistManager pm = new PlaylistManager("", null);
+        PlaylistManager pm = new PlaylistManager("","");
         return pm.getAllPlaylist();
     }
 
@@ -134,7 +134,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 
         try {
             Server s = new Server();
-            Registry r = LocateRegistry.createRegistry(PORT);
+            Registry r = LocateRegistry.createRegistry(1099);
             r.rebind("SERVER", s);
             System.out.println("Server start correct");
             for (;;) {

@@ -17,6 +17,8 @@ public interface PlaylistManagerInterface {
 
     Playlist getPlaylist();
 
-    void setSearchCriteria(String title, User user);
+    ArrayList<Playlist> getAllPlaylist();
+
+    void setSearchCriteria(String title, String user);
     
 }

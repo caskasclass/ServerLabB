@@ -23,14 +23,14 @@ public class PlaylistManager implements PlaylistManagerInterface {
     private String[] searchCriteria; // criteri di ricerca
 
     // costruttore nel caso si voglia cercare a partire da un utente ed un titolo
-    public PlaylistManager(String title, User user) {
+    public PlaylistManager(String title, String user) {
         this.sqlfinder = new SQLFinder();
         this.res = null;
         this.trackId = new ArrayList<String>();
         this.searchCriteria = new String[2]; // settaggio dei criteri a titolo della playlist e userid
         if(user != null) {
             this.searchCriteria[0] = title;
-            this.searchCriteria[1] = user.getUserid();
+            this.searchCriteria[1] = user;
         } else {
             this.searchCriteria[0] = title;
             this.searchCriteria[1] = "";
@@ -39,7 +39,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
     }
 
     public PlaylistManager() { // costruttore nel caso si voglia inserire una playlist
-        this.sqlfinder = null;
+        this.sqlfinder = new SQLFinder();
         this.res = null;
         this.trackId = null;
         this.sqlinserter = new SQLInserter();
@@ -57,9 +57,9 @@ public class PlaylistManager implements PlaylistManagerInterface {
     }
 
     @Override
-    public void setSearchCriteria(String title, User user) { // nel caso si vogliano risettare i criteri di ricerca
+    public void setSearchCriteria(String title, String user) { // nel caso si vogliano risettare i criteri di ricerca
         this.searchCriteria[0] = title;
-        this.searchCriteria[1] = user.getUserid();
+        this.searchCriteria[1] = user;
     }
 
     @Override
@@ -68,14 +68,15 @@ public class PlaylistManager implements PlaylistManagerInterface {
         this.sqlfinder.renewQuery(); // rinnovamento della query
         this.sqlfinder.renewResultSet(); // rinnovamento dei risultati
         // costruzione della query
-        this.sqlfinder.setQuery("track_id", "playlist",
+        this.sqlfinder.setQuery("track_id,image", "playlist",
                 "title = '" + this.searchCriteria[0] + "' AND userid = '" + this.searchCriteria[1] + "'");
         this.sqlfinder.executeQuery(); // esecuzione della query
         try {
             String img = null;
+            
             while (this.sqlfinder.getRes().next()) { // ciclo finchè ci sono risultati
-                String trackId = this.sqlfinder.getRes().getString("track_id"); // ottenimento del trackId
-                img = this.sqlfinder.getRes().getString("image");
+                String trackId = this.sqlfinder.getRes().getString("track_id");
+                img = this.sqlfinder.getRes().getString("image");// ottenimento del trackId
                 this.trackId.add(trackId); // aggiunta alla lista
             }
             this.res = new Playlist(this.searchCriteria[0], this.trackId, img, this.searchCriteria[1]); // costruzione
@@ -124,6 +125,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
         }
     }
 
+    @Override
     public ArrayList<Playlist> getAllPlaylist() {
         try {
             ArrayList<Playlist> res = new ArrayList<Playlist>();
@@ -146,6 +148,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
             }
             return res;
         } catch (Exception e) {
+            System.out.println("null");
             return null;
         }
     }
