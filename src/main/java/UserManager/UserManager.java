@@ -108,14 +108,14 @@ public class UserManager implements UserManagerInterface {
                 //se la password inserita corrisponde a quella trovata decrittata, si procede con la presa degli altri valori
                 if (this.searchCriteria[1].equals(encrypt(cPassword, 26 - KEY))) {
                     String userid = this.sqlfinder.getRes().getString("userid");
-                    String name = this.sqlfinder.getRes().getString("name");
-                    String surname = this.sqlfinder.getRes().getString("surname");
+                    String nome = this.sqlfinder.getRes().getString("name");
+                    String cognome = this.sqlfinder.getRes().getString("surname");
                     String cf = this.sqlfinder.getRes().getString("cf");
-                    String address = this.sqlfinder.getRes().getString("address");
+                    String indirizzo = this.sqlfinder.getRes().getString("address");
                     int cap = this.sqlfinder.getRes().getInt("cap");
-                    String city = this.sqlfinder.getRes().getString("city");
+                    String città = this.sqlfinder.getRes().getString("city");
                     String mail = this.sqlfinder.getRes().getString("mail");
-                    u = new User(userid, name, surname, cf, address, cap, city, mail, this.searchCriteria[1]); 
+                    u = new User(userid, nome, cognome, cf, indirizzo, cap, città, mail, this.searchCriteria[1]); 
                 }
             }
         } catch (SQLException e) {
