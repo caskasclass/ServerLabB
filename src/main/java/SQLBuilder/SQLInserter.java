@@ -66,6 +66,10 @@ public class SQLInserter implements SQLInserterInterface {
         }
     }
 
+    public void delete(String from, String where) {
+        this.query = "DELETE FROM " + from + " WHERE " + where;
+    }
+
     // metodo per il settaggio della query
     @Override
     public void setQuery(String tablename) { // passato il nome della tabella in cui eseguire la query

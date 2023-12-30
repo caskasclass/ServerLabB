@@ -49,5 +49,9 @@ public interface ServerInterface extends Remote {
     ArrayList<TrackDetails> getTopTracks() throws RemoteException;
 
     ArrayList<Playlist> getAllPlaylist() throws RemoteException;
+
+    void deletePlayList(Playlist p) throws RemoteException;
+
+    void deleteTrack(Playlist p, String trackid) throws RemoteException;
     
 }

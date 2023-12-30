@@ -126,10 +126,19 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         SongFinder sf = new SongFinder();
         return sf.getTopTracks();
     }
+    @Override
+    public void deletePlayList(Playlist p) {
+        new PlaylistManager().deletePlayList(p);
+    }
+
+    @Override
+    public void deleteTrack(Playlist p, String trackid) {
+        new PlaylistManager().deleteTrack(p, trackid);
+    }
 
     public static void main(String[] args) throws RemoteException {
 
-        try {
+        /*try {
             Server s = new Server();
             Registry r = LocateRegistry.createRegistry(1099);
             r.rebind("SERVER", s);
@@ -140,19 +149,16 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
             System.out.println("Server start failed");
             System.out.println(e.getMessage());
             System.exit(0);
-        }
+        }*/
 
         
-          /*Server s = new Server();
+          Server s = new Server();
           try {
-          ArrayList<Playlist> res = s.getAllPlaylist();
-          for (int i = 0; i < res.size(); i++) {
-          System.out.println(res.get(i).toString());
-          }
+            s.deleteTrack(new Playlist("Prova", "admin"), "4DD0Zh7yPLL38dgqTNZCNp");
           } catch (Exception e) {
           e.printStackTrace();
           }
-          System.exit(0);*/
+          System.exit(0);
          
 
     }

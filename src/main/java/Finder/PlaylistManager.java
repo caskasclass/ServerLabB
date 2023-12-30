@@ -181,4 +181,18 @@ public class PlaylistManager implements PlaylistManagerInterface {
             return null;
         }
     }
+
+    @Override
+    public void deletePlayList(Playlist p) {
+        this.sqlinserter.renewQuery();
+        this.sqlinserter.delete("playlist", "userid = '" + p.getUser() + "' AND title = '" + p.getTitle() + "';");
+        this.sqlinserter.executeQuery();
+    }
+
+    @Override
+    public void deleteTrack(Playlist p, String trackId) {
+        this.sqlinserter.renewQuery();
+        this.sqlinserter.delete("playlist", "userid = '" + p.getUser() + "' AND title = '" + p.getTitle() + "' AND track_id = '" + trackId + "';");
+        this.sqlinserter.executeQuery();
+    }
 }
