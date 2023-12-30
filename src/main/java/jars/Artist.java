@@ -1,10 +1,12 @@
 package jars;
 
+import java.io.Serializable;
+
 /**
  *
  * @author lorenzo
  */
-public class Artist {
+public class Artist implements Serializable {
     private String artist_id;
     private String name;
 

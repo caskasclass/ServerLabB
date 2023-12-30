@@ -138,7 +138,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 
     public static void main(String[] args) throws RemoteException {
 
-        /*try {
+        try {
             Server s = new Server();
             Registry r = LocateRegistry.createRegistry(PORT);
             r.rebind("SERVER", s);
@@ -149,16 +149,20 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
             System.out.println("Server start failed");
             System.out.println(e.getMessage());
             System.exit(0);
-        }*/
+        }
 
         
-          Server s = new Server();
+          /*Server s = new Server();
           try {
-            s.deleteTrack(new Playlist("Prova", "admin"), "4DD0Zh7yPLL38dgqTNZCNp");
+            String si = "jason mraz"; int d = 2008;
+            ArrayList<Track> ar = s.getAllTrackInformation(s.getTrackId(si, d), 0, s.getTrackId(si, d).size());
+            for(int i = 0; i < ar.size(); i++) {
+                System.out.println(ar.get(i));
+            }
           } catch (Exception e) {
           e.printStackTrace();
           }
-          System.exit(0);
+          System.exit(0);*/
          
 
     }
