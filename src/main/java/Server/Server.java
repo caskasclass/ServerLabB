@@ -139,6 +139,13 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     public static void main(String[] args) throws RemoteException {
 
         try {
+
+            /*for(int i = 0; i < 10; i++) {
+                Server s = new Server();
+                Registry r = LocateRegistry.createRegistry(PORT);
+                r.rebind(("SERVER" + i), s);
+            }*/
+            
             Server s = new Server();
             Registry r = LocateRegistry.createRegistry(PORT);
             r.rebind("SERVER", s);

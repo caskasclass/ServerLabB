@@ -68,7 +68,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
         this.sqlfinder.renewQuery(); // rinnovamento della query
         this.sqlfinder.renewResultSet(); // rinnovamento dei risultati
         // costruzione della query
-        this.sqlfinder.setQuery("track_id", "playlist",
+        this.sqlfinder.setQuery("track_id, image", "playlist",
                 "LOWER(title) = LOWER('" + this.searchCriteria[0] + "') AND LOWER(userid) = LOWER('" + this.searchCriteria[1] + "');");
         this.sqlfinder.executeQuery(); // esecuzione della query
         try {
