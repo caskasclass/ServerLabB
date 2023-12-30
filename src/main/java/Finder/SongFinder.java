@@ -89,7 +89,7 @@ public class SongFinder implements SongFinderInterface {
         this.dbmanager.renewResultSet();
 
         if (this.searchCriteria.length == 1) {
-            this.dbmanager.setQuery("track_id", "tracks", "LOWER(name) = LOWER('" + this.searchCriteria[0] + "');");
+            this.dbmanager.setQuery("track_id", "tracks", "LOWER(name) LIKE LOWER('" + this.searchCriteria[0] + "%') LIMIT 20;");
             this.dbmanager.executeQuery();
             try {
                 while (this.dbmanager.getRes().next()) {
@@ -100,7 +100,7 @@ public class SongFinder implements SongFinderInterface {
             }
         } else {
             try {
-                this.dbmanager.setQuery("artist_id", "artists", "LOWER(name) = LOWER('" + this.searchCriteria[0] + "');");
+                this.dbmanager.setQuery("artist_id", "artists", "LOWER(name) LIKE LOWER('" + this.searchCriteria[0] + "%') LIMIT 20;");
                 this.dbmanager.executeQuery();
 
                 String artist_id = "";
