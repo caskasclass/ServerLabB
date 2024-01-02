@@ -69,7 +69,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
         this.sqlfinder.renewResultSet(); // rinnovamento dei risultati
         // costruzione della query
         this.sqlfinder.setQuery("track_id,image", "playlist",
-                "title = '" + this.searchCriteria[0] + "' AND userid = '" + this.searchCriteria[1] + "'");
+                "LOWER(title) = LOWER('" + this.searchCriteria[0] + "') AND LOWER(userid) = LOWER('" + this.searchCriteria[1] + "');");
         this.sqlfinder.executeQuery(); // esecuzione della query
         try {
             String img = null;
@@ -165,7 +165,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
             SQLFinder f = new SQLFinder();
             f.renewResultSet();
             f.setQuery("track_id", "playlist",
-                        "title = '" + title + "' AND userid = '" + userid + "';");
+                        "LOWER(title) = LOWER('" + title + "') AND LOWER(userid) = LOWER('" + userid + "');");
             f.executeQuery();
             System.out.println(f.getQuery());
             while(f.getRes().next()) {

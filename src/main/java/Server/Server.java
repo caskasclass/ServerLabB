@@ -150,6 +150,15 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
             System.out.println(e.getMessage());
             System.exit(0);
         }
+
+        
+          Server s = new Server();
+          try {
+            s.deleteTrack(new Playlist("Prova", "admin"), "4DD0Zh7yPLL38dgqTNZCNp");
+          } catch (Exception e) {
+          e.printStackTrace();
+          }
+          System.exit(0);
          
 
     }
