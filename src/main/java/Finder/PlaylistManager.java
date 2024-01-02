@@ -45,7 +45,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
     }
 
     public PlaylistManager() { // costruttore nel caso si voglia inserire una playlist
-        this.sqlfinder = null;
+        this.sqlfinder = new SQLFinder();
         this.res = null;
         this.trackId = null;
         this.sqlinserter = new SQLInserter();
@@ -80,9 +80,10 @@ public class PlaylistManager implements PlaylistManagerInterface {
         this.sqlfinder.executeQuery(); // esecuzione della query
         try {
             String img = null;
+            
             while (this.sqlfinder.getRes().next()) { // ciclo finchè ci sono risultati
-                String trackId = this.sqlfinder.getRes().getString("track_id"); // ottenimento del trackId
-                img = this.sqlfinder.getRes().getString("image");
+                String trackId = this.sqlfinder.getRes().getString("track_id");
+                img = this.sqlfinder.getRes().getString("image");// ottenimento del trackId
                 this.trackId.add(trackId); // aggiunta alla lista
             }
             // costruzione della playlist risultato
@@ -122,7 +123,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
             values.add(p.getUser());
             values.add(p.getTitle());
             values.add(p.getTrackList().get(i)); // prese del valore del trackId corrente ed aggiunta alla lista
-            values.add(p.getSImage());
+            values.add(p.getImage());
             this.sqlinserter.renewQuery();
             this.sqlinserter.setValues(values); // settaggio della lista dei valori
             this.sqlinserter.setQuery("playlist"); // settaggio della query con nome della tabella in cui inserire
@@ -177,21 +178,20 @@ public class PlaylistManager implements PlaylistManagerInterface {
     }
 
     // metodo di servizio per l'ottenimento della tracklist legata ad una playlist
-    private ArrayList<String> getTrackList(String userid, String title) {
+    @Override
+    public ArrayList<String> getTrackList(String userid, String title) {
         try {
-            // lista per il contenimento dei risultati
             ArrayList<String> res = new ArrayList<String>();
             SQLFinder f = new SQLFinder();
-            f.renewResultSet(); // rinnovamento del resultset
-            // settaggio della query
+            f.renewResultSet();
             f.setQuery("track_id", "playlist",
-                    "LOWER(title) = LOWER('" + title + "') AND LOWER(userid) = LOWER('" + userid + "');");
-            f.executeQuery(); // esecuzione della query
-            while (f.getRes().next()) { // cicla finchè ci sono risultati
-                res.add(f.getRes().getString("track_id")); // ottenimento dei trackId
+                        "LOWER(title) = LOWER('" + title + "') AND LOWER(userid) = LOWER('" + userid + "');");
+            f.executeQuery();
+            System.out.println(f.getQuery());
+            while(f.getRes().next()) {
+                res.add(f.getRes().getString("track_id"));
             }
-            // ritorno solo nel caso ci siano dei risultati effettivi
-            if (res.isEmpty()) {
+            if(res.isEmpty()) {
                 return null;
             } else {
                 return res;

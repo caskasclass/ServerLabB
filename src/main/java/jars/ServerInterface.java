@@ -2,11 +2,6 @@ package jars;
 
 import java.rmi.*;
 import java.util.ArrayList;
-import jars.Album;
-import jars.Emotion;
-import jars.Playlist;
-import jars.Track;
-import jars.User;
 
 /**
  *
@@ -40,7 +35,9 @@ public interface ServerInterface extends Remote {
 
     ArrayList<Track> getAllTrackInformation(Playlist p, int begin, int end) throws RemoteException;
 
-    ArrayList<Emotion> getEmotion(Track track) throws RemoteException;
+    EmotionEvaluation getMyEmotion(Track track,String user_id) throws RemoteException;
+
+    ArrayList<ChartData> getAllEmotion(Track track) throws RemoteException;
 
     Playlist getPlaylist(String title, String user) throws RemoteException;
 
@@ -52,11 +49,15 @@ public interface ServerInterface extends Remote {
 
     ArrayList<String> getAllTrackId() throws RemoteException;
 
-    void insertEmotion(Emotion e) throws RemoteException;
+    void insertEmotion(EmotionEvaluation e) throws RemoteException;
+
+    boolean checkIfRated(String track_id, String user_id) throws RemoteException;
 
     void registration(User u) throws RemoteException;
 
     ArrayList<TrackDetails> getTopTracks() throws RemoteException;
+
+    ArrayList<AlbumPreview> getTopAlbums() throws RemoteException;
 
     ArrayList<Playlist> getAllPlaylist() throws RemoteException;
 
