@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import SQLBuilder.SQLInserter;
 
+/*
+ * Oggetto che si occupa dell'update del campo popolarity nel database della tabella tracks
+ */
+
 public class PopolarityIncreaser extends Thread {
     private SQLInserter sqlinserter; // oggetto in grado di inserire i risultati
     private ArrayList<String> trackId; // lista dei trackId di cui aumentare la popolarità

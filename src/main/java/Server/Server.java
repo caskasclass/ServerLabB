@@ -15,6 +15,18 @@ import java.util.ArrayList;
  */
 public class Server extends UnicastRemoteObject implements ServerInterface {
 
+    /*
+     * Il server consiste in un array di oggetti di tipo Server instanziati ognuno
+     * su una porta diversa a partire da 8080.
+     * Sono instanziati fino a 100 oggetti a cui il client può accedere tramite
+     * l'interfaccia ServerInterface.
+     * Il server implementa dei metodi che a loro volta consistono in dei servizi,
+     * ogni servizio è eseguito da uno specifico oggetto, costrudendo
+     * l'oggetto appropriato ed eseguendo il metodo più opportuno.
+     * Per maggiori informazioni su ogni servizio si veda la documentazione apposita
+     * di ogni classe.
+     */
+
     public Server() throws RemoteException {
         super();
     }
@@ -70,7 +82,9 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     @Override
     public Playlist getPlaylist(String title, String user) {
         PlaylistManager pm = new PlaylistManager(title, user);
-        return pm.getPlaylist();
+        Playlist p = pm.getPlaylist();
+        new PlaylistPopolarityIncreaser(p);
+        return p;
     }
 
     @Override
@@ -111,11 +125,6 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     }
 
     @Override
-    public void ciao() {
-        System.out.println("ciao");
-    }
-
-    @Override
     public ArrayList<String> getAllTrackId() {
         SongFinder sf = new SongFinder();
         return sf.getAllTrackId();
@@ -126,6 +135,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         SongFinder sf = new SongFinder();
         return sf.getTopTracks();
     }
+
     @Override
     public void deletePlayList(Playlist p) {
         new PlaylistManager().deletePlayList(p);
@@ -139,39 +149,22 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     public static void main(String[] args) throws RemoteException {
 
         try {
-
-            /*for(int i = 0; i < 10; i++) {
-                Server s = new Server();
-                Registry r = LocateRegistry.createRegistry(PORT);
-                r.rebind(("SERVER" + i), s);
-            }*/
-            
-            Server s = new Server();
-            Registry r = LocateRegistry.createRegistry(PORT);
-            r.rebind("SERVER", s);
+            //ciclo per l'instanziazione dei vari oggetti su ogni porta che si trova nell'array PORT descritto nell'interfaccia ServerInterface
+            for (int i = 0; i < PORT.length; i++) { 
+                Registry r = LocateRegistry.createRegistry(PORT[i]);
+                r.rebind("SERVER" + i, new Server());
+            }
+            //comunicazione dell'avvenuta creazione degli oggetti
             System.out.println("Server start correct");
+            //ciclo infinito per l'utilizzo di ogni oggetto
             for (;;) {
             }
         } catch (Exception e) {
+            //gestione dell'eccezione nel caso si verifichi
             System.out.println("Server start failed");
             System.out.println(e.getMessage());
             System.exit(0);
         }
-
-        
-          /*Server s = new Server();
-          try {
-            String si = "jason mraz"; int d = 2008;
-            ArrayList<Track> ar = s.getAllTrackInformation(s.getTrackId(si, d), 0, s.getTrackId(si, d).size());
-            for(int i = 0; i < ar.size(); i++) {
-                System.out.println(ar.get(i));
-            }
-          } catch (Exception e) {
-          e.printStackTrace();
-          }
-          System.exit(0);*/
-         
-
     }
 
 }

@@ -11,6 +11,12 @@ import jars.Track;
  *
  * @author lorenzo
  */
+
+/*
+ * Gli oggetti modellati da questa classe si occupano dell'inserimento e della
+ * lettura delle informazioni relative alle emozioni
+ * legate dei brani.
+ */
 public class EmotionManager implements EmotionManagerInterface {
 
     private SQLFinder sqlfinder; // oggetto in gradi di trovare nelle tabelle

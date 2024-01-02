@@ -25,4 +25,6 @@ public interface SQLFinderInterface {
     void setWhere(String where);
 
     ResultSet getRes(); 
+
+    String getQuery();
 }

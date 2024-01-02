@@ -21,8 +21,6 @@ public interface PlaylistManagerInterface {
 
     ArrayList<Playlist> getAllPlaylist();
 
-    ArrayList<String> getTrackList(String userid, String title);
-
     void deleteTrack(Playlist p, String trackId);
 
     void deletePlayList(Playlist p);
