@@ -6,6 +6,10 @@ import java.sql.*;
  *
  * @author lorenzo
  */
+
+ /*
+  * Classe che modella oggetti in grado di eseguire query per ricercare informazioni all'interno del database
+  */
 public class SQLFinder implements SQLFinderInterface {
 
     private String select; // contiene la clausola select
@@ -111,6 +115,7 @@ public class SQLFinder implements SQLFinderInterface {
         return res;
     }
 
+    @Override
     public String getQuery() {
         return this.select + this.from + this.where;
     }

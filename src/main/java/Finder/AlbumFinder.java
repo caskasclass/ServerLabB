@@ -11,6 +11,10 @@ import jars.Artist;
  *
  * @author lorenzo
  */
+
+/*
+ * Gli oggetti modellati da questa classe si occupano della ricerca nel database degli album e solo dell'ottenimento delle informazioni relative ad essi.
+ */
 public class AlbumFinder implements AlbumFinderInterface {
 
     private SQLFinder dbmanager; // essendo che gli album non devono essere toccati non è presente un inserter
@@ -67,16 +71,16 @@ public class AlbumFinder implements AlbumFinderInterface {
         if (this.searchCriteria.length == 1) {
             // costruzione della query
             this.dbmanager.setQuery("album_id", "albums", "album_name = '" + this.searchCriteria[0] + "';");
-            this.dbmanager.executeQuery(); // esecuzione della query
         } else {
             // costruzione della query con SELECT, FROM, WHERE separati
             this.dbmanager.setSelect("albums.album_id");
             this.dbmanager.setFrom("albums\n"
                     + "JOIN artist_mapping_album ON albums.album_id = artist_mapping_album.album_id\n"
                     + "JOIN artists ON artist_mapping_album.artist_id = artists.artist_id");
-            this.dbmanager.setWhere("LOWER(artists.name) = LOWER('" + this.searchCriteria[0] + "') AND albums.release_date between '"
-                    + this.searchCriteria[1] + "-01-01' AND '" + this.searchCriteria[1] + "-12-31';");
+            this.dbmanager.setWhere("LOWER(artists.name) LIKE LOWER('" + this.searchCriteria[0] + "%') AND albums.release_date between '"
+                    + this.searchCriteria[1] + "-01-01' AND '" + this.searchCriteria[1] + "-12-31' LIMIT 20;");
         }
+        //esecuzione della query
         this.dbmanager.executeQuery();
         try {
             while (this.dbmanager.getRes().next()) { // ciclo finchè ci sono risultati nella query
@@ -94,7 +98,7 @@ public class AlbumFinder implements AlbumFinderInterface {
         return this.albumId.isEmpty(); // controllo se la lista con gli album_id di quella ricerca sono vuoti
     }
 
-    // il metodo prende la lista dei trackId, non serve passarla perchè esiste un
+    // il metodo prende la lista degli albumId, non serve passarla perchè esiste un
     // costruttore apposito
     @Override
     public ArrayList<Album> getAllAlbumInformation(int begin, int end) { // si sceglie da che albumId iniziare e a quale

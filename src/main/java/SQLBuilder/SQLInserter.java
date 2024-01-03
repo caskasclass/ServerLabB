@@ -9,6 +9,11 @@ import jars.Playlist;
  *
  * @author lorenzo
  */
+
+/*
+ * Classe che modella oggetti in grado di inserire nel database delle
+ * informazioni oppure di aggiornarne altre
+ */
 public class SQLInserter implements SQLInserterInterface {
 
     private Connection conn; // memorizza la connessione
@@ -56,16 +61,19 @@ public class SQLInserter implements SQLInserterInterface {
         this.executeQuery();
     }
 
-    public void updatePlaylistPopolarity(Playlist p) {
-        //costruzione della query
-        for(int i = 0; i < p.getTrackList().size(); i++) {
-            this.query = "UPDATE playlist" 
-            + "SET popolarity = popolarity + 1"
-            + "WHERE title = '" + p.getTitle() + "' AND userid = '" + p.getUser() + "' AND trackId = '" + p.getTrackList().get(i) + "'";
+    // metodo per l'aumento della popolarità della playlist
+    public void updatePlaylistPopularity(Playlist p) {
+        // costruzione della query
+        for (int i = 0; i < p.getTrackList().size(); i++) {
+            this.query = "UPDATE playlist"
+                    + "SET popolarity = popolarity + 1"
+                    + "WHERE title = '" + p.getTitle() + "' AND userid = '" + p.getUser() + "' AND trackId = '"
+                    + p.getTrackList().get(i) + "'";
             this.executeQuery();
         }
     }
 
+    // metodo per la cancellazione di elementi generici
     public void delete(String from, String where) {
         this.query = "DELETE FROM " + from + " WHERE " + where;
     }
@@ -101,11 +109,12 @@ public class SQLInserter implements SQLInserterInterface {
         this.query = this.query.replace("!", iValues);
     }
 
+    // metodo per l'ottenimento della query
     public String getQuery() {
         return this.query;
     }
 
-    // metodo per verificare se un valore sia intero o no
+    // metodo di servizio per verificare se un valore sia intero o no
     private static boolean isInteger(String s) {
         try {
             Integer.parseInt(s);

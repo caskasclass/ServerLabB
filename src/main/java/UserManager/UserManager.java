@@ -10,6 +10,10 @@ import jars.User;
  *
  * @author lorenzo
  */
+
+/*
+ * Classe che modella oggetti in grado di inserire e leggere dalla tabella registrated_users
+ */
 public class UserManager implements UserManagerInterface {
 
     private SQLFinder sqlfinder; //oggetto in grado di cercare nella tabella

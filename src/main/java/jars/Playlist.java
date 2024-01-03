@@ -3,8 +3,6 @@ package jars;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import javafx.scene.image.Image;
-
 
 /**
  *

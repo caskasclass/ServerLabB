@@ -11,6 +11,10 @@ import jars.TrackDetails;
  *
  * @author lorenzo
  */
+
+/*
+ * Classe che modella gli oggetti per la ricerca delle tracce all'interno del database
+ */
 public class SongFinder implements SongFinderInterface {
 
     private SQLFinder dbmanager; // oggetto in grado di ricercare dati
@@ -68,11 +72,13 @@ public class SongFinder implements SongFinderInterface {
     }
 
     @Override
+    //metodo per l'ottenimento di tutti i primi 20 trackid del database in ordine di popolarità
     public ArrayList<String> getAllTrackId() {
-        this.dbmanager.renewQuery();
-        this.dbmanager.renewResultSet();
+        this.dbmanager.renewQuery(); //rinnovamento della query
+        this.dbmanager.renewResultSet(); //rinnovamento dei risultati
+        //settaggio della query
         this.dbmanager.setQuery("track_id", "tracks ORDER BY popolarity DESC LIMIT 20");
-        this.dbmanager.executeQuery();
+        this.dbmanager.executeQuery(); //esecuzione della query
         try {
             while (this.dbmanager.getRes().next()) { // cicla finchè ci sono risultati
                 this.trackId.add(this.dbmanager.getRes().getString("track_id")); // ottenimento del trackId
@@ -80,27 +86,29 @@ public class SongFinder implements SongFinderInterface {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+        //restituzione dei trackId
         return trackId;
     }
 
     @Override
+    //metodo per l'ottenimento dei trackid tramite ricerca
     public ArrayList<String> getTrackId() {
-        this.dbmanager.renewQuery();
-        this.dbmanager.renewResultSet();
-
+        this.dbmanager.renewQuery(); //rinnovamento della query
+        this.dbmanager.renewResultSet(); //rinnovamento del resultset
+        //se i parametri di ricerca sono due si cerca per autore e data, altrimenti per titolo
         if (this.searchCriteria.length == 1) {
-            this.dbmanager.setQuery("track_id", "tracks", "LOWER(name) = LOWER('" + this.searchCriteria[0] + "');");
+            this.dbmanager.setQuery("track_id", "tracks", "LOWER(name) LIKE LOWER('" + this.searchCriteria[0] + "%') LIMIT 20;");
             this.dbmanager.executeQuery();
             try {
-                while (this.dbmanager.getRes().next()) {
-                    this.trackId.add(this.dbmanager.getRes().getString("track_id"));
+                while (this.dbmanager.getRes().next()) { //cicla finchè ci sono risultati
+                    this.trackId.add(this.dbmanager.getRes().getString("track_id")); //ottenimento dei trackid
                 }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
         } else {
             try {
-                this.dbmanager.setQuery("artist_id", "artists", "LOWER(name) = LOWER('" + this.searchCriteria[0] + "');");
+                this.dbmanager.setQuery("artist_id", "artists", "LOWER(name) LIKE LOWER('" + this.searchCriteria[0] + "%') LIMIT 20;");
                 this.dbmanager.executeQuery();
 
                 String artist_id = "";
@@ -141,6 +149,7 @@ public class SongFinder implements SongFinderInterface {
                 System.err.println(e.getMessage());
             }
         }
+        //ritorno dei risultati
         return this.trackId;
     }
 
@@ -154,15 +163,15 @@ public class SongFinder implements SongFinderInterface {
     // ricerca di tutte le informazioni relative ad ogni trackId
     public ArrayList<Track> getAllTrackInformation(int begin, int end) { // vengono passati il
                                                                          // punto da dove
-                                                                         // iniziare, il punto da
-                                                                         // dove finire e la lista
-                                                                         // di trackId
+                                                                         // iniziare e il punto da
+                                                                         // dove finire
         this.dbmanager.renewResultSet();
         if (this.checkResult()) { // se la lista è vuota viene interrotto il metodo
             return null;
         }
         ArrayList<Track> res = new ArrayList<Track>();
         try {
+            //ottenimento di tutte le infrmazioni relative alla traccia
             for (int i = begin; i < end; i++) {
                 Track t = new Track(null, null, 0, null, null, null, null, null);
                 this.dbmanager.renewQuery();
@@ -199,7 +208,7 @@ public class SongFinder implements SongFinderInterface {
                     String name = this.dbmanager.getRes().getString("name");
                     t.setArtist_name(name);
                 }
-                res.add(t);
+                res.add(t); //aggiunta della traccia ai risultati
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -208,6 +217,7 @@ public class SongFinder implements SongFinderInterface {
     }
 
     @Override
+    // metodo per l'ottenimento delle top 20 tracce presenti nel database 
     public ArrayList<TrackDetails> getTopTracks() {
         ArrayList<String> trackId = this.getAllTrackId();
         ArrayList<Track> tmp = this.getAllTrackInformation(0, trackId.size());

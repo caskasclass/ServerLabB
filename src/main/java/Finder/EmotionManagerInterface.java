@@ -1,7 +1,9 @@
 package Finder;
 
 import java.util.ArrayList;
-import jars.Emotion;
+
+import jars.ChartData;
+import jars.EmotionEvaluation;
 
 /**
  *
@@ -9,9 +11,11 @@ import jars.Emotion;
  */
 public interface EmotionManagerInterface {
 
-    ArrayList<Emotion> getEmotions();
+    EmotionEvaluation getMyEmotions(String userId);
 
-    void insertEmotion(Emotion emotion);
+    ArrayList<ChartData> getAllEmotions();
+
+    void insertEmotions(EmotionEvaluation emotion);
     
     void setSearchCriteria(String searchCriteria);
     
