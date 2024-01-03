@@ -13,6 +13,16 @@ import SQLBuilder.*;
 import java.util.ArrayList;
 
 /**
+ * Progetto laboratorio B: "Emotional Songs", anno 2022-2023
+ * 
+ * @author Beatrice Bastianello, matricola 751864, VA
+ * @author Lorenzo Barbieri  , matricola 748695, VA
+ * @author Filippo Storti , matricola 749195, VA
+ * @author Nazar Viytyuk, matricola 748964, VA
+ * @version 1.0
+ */
+
+/**
  *
  * @author lorenzo
  */
@@ -233,12 +243,20 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         return topAlbums;
     }
 
+
+    @Override
+    public ArrayList<String> findexExistingUsers() throws RemoteException {
+        UserManager u = new UserManager();
+        return u.findexExistingUsers();
+    }
+
+
     public static void main(String[] args) throws RemoteException {
 
         try {
             //ciclo per l'instanziazione dei vari oggetti su ogni porta che si trova nell'array PORT descritto nell'interfaccia ServerInterface
             for (int i = 0; i < PORT.length; i++) { 
-                Registry r = LocateRegistry.createRegistry(PORT[i]);
+                Registry r = LocateRegistry.createRegistry(ServerInterface.PORT[i]);
                 r.rebind("SERVER" + i, new Server());
             }
             //comunicazione dell'avvenuta creazione degli oggetti

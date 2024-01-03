@@ -6,8 +6,13 @@ import java.util.ArrayList;
 import jars.Playlist;
 
 /**
- *
- * @author lorenzo
+ * Progetto laboratorio B: "Emotional Songs", anno 2022-2023
+ * 
+ * @author Beatrice Bastianello, matricola 751864, VA
+ * @author Lorenzo Barbieri  , matricola 748695, VA
+ * @author Filippo Storti , matricola 749195, VA
+ * @author Nazar Viytyuk, matricola 748964, VA
+ * @version 1.0
  */
 
 /*
@@ -39,8 +44,8 @@ public class SQLInserter implements SQLInserterInterface {
     // costruttore nel caso di connessione standard
     public SQLInserter() {
         try {
-            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/LabDB", "postgres",
-                    "postgres");
+            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/EmotionalSongs", "postgres",
+                    "5640");
         } catch (SQLException e) {
             System.err.println("Database connection failed");
         }
@@ -62,7 +67,7 @@ public class SQLInserter implements SQLInserterInterface {
     }
 
     // metodo per l'aumento della popolarità della playlist
-    public void updatePlaylistPopularity(Playlist p) {
+    public void updatePlaylistPopolarity(Playlist p) {
         // costruzione della query
         for (int i = 0; i < p.getTrackList().size(); i++) {
             this.query = "UPDATE playlist"
