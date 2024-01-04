@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author lorenzo
+ * @author lorenzoA
  */
 public class Server extends UnicastRemoteObject implements ServerInterface {
 

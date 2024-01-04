@@ -42,20 +42,26 @@ public class SQLInserter implements SQLInserterInterface {
     }
 
     // costruttore nel caso di connessione standard
-    public SQLInserter() {
+public SQLInserter() {
+    boolean connected = false;
+
+    while (!connected) {
         try {
-            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/LabDB", "postgres",
-                    "postgres");
+            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/EmotionalSongs", "postgres", "5640");
+            connected = true; // Connessione riuscita, usciamo dal ciclo
         } catch (SQLException e) {
-            System.err.println("Database connection failed");
+            System.err.println("Database connection failed, trying to reconnect");
         }
-        // settaggio delle liste
-        this.columns = new ArrayList<String>();
-        this.values = new ArrayList<String>();
-        // settaggio della query
-        this.query = "INSERT INTO %(?)\n"
-                + "VALUES (!);";
     }
+
+    // settaggio delle liste
+    this.columns = new ArrayList<>();
+    this.values = new ArrayList<>();
+
+    // settaggio della query
+    this.query = "INSERT INTO %(?)\n" + "VALUES (!);";
+}
+
 
     // metodo per aumentare il parametro popolarità di una traccia specifica
     @Override

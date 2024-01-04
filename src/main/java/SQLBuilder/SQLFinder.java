@@ -7,19 +7,20 @@ import java.sql.*;
  * @author lorenzo
  */
 
- /**
+/**
  * Progetto laboratorio B: "Emotional Songs", anno 2022-2023
  * 
  * @author Beatrice Bastianello, matricola 751864, VA
- * @author Lorenzo Barbieri  , matricola 748695, VA
+ * @author Lorenzo Barbieri , matricola 748695, VA
  * @author Filippo Storti , matricola 749195, VA
  * @author Nazar Viytyuk, matricola 748964, VA
  * @version 1.0
  */
 
- /*
-  * Classe che modella oggetti in grado di eseguire query per ricercare informazioni all'interno del database
-  */
+/*
+ * Classe che modella oggetti in grado di eseguire query per ricercare
+ * informazioni all'interno del database
+ */
 public class SQLFinder implements SQLFinderInterface {
 
     private String select; // contiene la clausola select
@@ -45,12 +46,16 @@ public class SQLFinder implements SQLFinderInterface {
 
     // costruttore in caso della connessione standard
     public SQLFinder() {
-        try {
-            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/LabDB", "postgres",
-                    "postgres");
-        } catch (SQLException e) {
-            System.err.println("Database connection failed");
-            return;
+        boolean connected = false; // controllo di avvenuta connessione
+
+        while (!connected) { //cicla finchè non si connette
+            try {
+                this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/EmotionalSongs", "postgres",
+                        "5640");
+                connected = true; // Connessione riuscita, usciamo dal ciclo
+            } catch (SQLException e) {
+                System.err.println("Database connection failed, trying to reconnect");
+            }
         }
         // settaggio della query
         this.select = "SELECT ?\n";
