@@ -1,6 +1,6 @@
 package UserManager;
 
-import pkg.User;
+import jars.User;
 
 /**
  *
@@ -10,6 +10,6 @@ public interface UserManagerInterface {
 
     User access();
 
-    void registration(User u);
+    boolean registration(User u);
     
 }

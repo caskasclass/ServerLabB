@@ -2,10 +2,13 @@ package Server;
 
 import java.rmi.*;
 import java.rmi.server.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.rmi.registry.*;
-import pkg.*;
+import jars.*;
 import UserManager.*;
 import Finder.*;
+import SQLBuilder.SQLFinder;
 
 import java.util.ArrayList;
 
@@ -26,9 +29,9 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     }
 
     @Override
-    public void registration(User u) {
+    public boolean registration(User u) {
         UserManager um = new UserManager();
-        um.registration(u);
+        return um.registration(u);
     }
 
     @Override
@@ -110,6 +113,33 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         return sf.getAllTrackId();
     }
 
+    public  ArrayList<TrackDetails> getTopTracks(){
+        ArrayList<TrackDetails> topTracks = new ArrayList<TrackDetails>();
+        SQLFinder dbmanager = new SQLFinder();
+        dbmanager.renewQuery();
+        dbmanager.renewResultSet();
+        dbmanager.setQuery("*"," tracks join albums using (album_id) order by popularity DESC limit 50");
+        dbmanager.executeQuery();
+        try {
+            while (dbmanager.getRes().next()) { // cicla finchè ci sono risultati
+                ResultSet res = dbmanager.getRes();
+                System.out.println("Result set size "+res.getFetchSize());
+
+                // create  TrackDetails and add it to the list
+                Track track = new Track(res.getString("track_id"), res.getString("name"), res.getInt("duration_ms"), "Silence is golden", res.getString("album_name"), res.getString("album_img0"),res.getString("album_img1"),res.getString("album_img2"));
+                topTracks.add(new TrackDetails(track,res.getString("album_id")));
+            }
+            for (TrackDetails trackDetails : topTracks) {
+                System.out.println(trackDetails.track.getName()+" album id : "+trackDetails.albumId);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        System.out.println("topTracks size: "+topTracks.size());
+        return topTracks;
+
+        
+    }
     public static void main(String[] args) throws RemoteException {
         try {
             Server s = new Server();

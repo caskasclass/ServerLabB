@@ -3,7 +3,7 @@ package SQLBuilder;
 import java.sql.*;
 import java.util.ArrayList;
 
-import pkg.Playlist;
+import jars.Playlist;
 
 /**
  *
@@ -34,8 +34,8 @@ public class SQLInserter implements SQLInserterInterface {
     // costruttore nel caso di connessione standard
     public SQLInserter() {
         try {
-            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/EmotionalSongs", "postgres",
-                    "5640");
+            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/emotionalsongs", "postgres",
+                    "");
         } catch (SQLException e) {
             System.err.println("Database connection failed");
         }
@@ -109,13 +109,15 @@ public class SQLInserter implements SQLInserterInterface {
 
     // metodo per l'esecuzione della query
     @Override
-    public void executeQuery() {
+    public boolean executeQuery() {
         PreparedStatement ps;
         try {
             ps = this.conn.prepareStatement(this.query);
             ps.executeQuery();
+            return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return false;
         }
     }
 

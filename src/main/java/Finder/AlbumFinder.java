@@ -4,8 +4,7 @@ import SQLBuilder.SQLFinder;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import pkg.Album;
-import pkg.Artist;
+import jars.*;
 
 /**
  *

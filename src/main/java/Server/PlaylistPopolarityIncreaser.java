@@ -1,7 +1,7 @@
 package Server;
 
 import SQLBuilder.SQLInserter;
-import pkg.Playlist;
+import jars.*;
 
 public class PlaylistPopolarityIncreaser extends Thread {
     private Playlist p;

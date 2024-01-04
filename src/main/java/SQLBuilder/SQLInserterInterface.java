@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public interface SQLInserterInterface {
 
-    void executeQuery();
+    boolean executeQuery();
 
     void setQuery(String tablename);
     

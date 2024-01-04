@@ -3,7 +3,7 @@ package Finder;
 import SQLBuilder.SQLFinder;
 import java.sql.*;
 import java.util.ArrayList;
-import pkg.Track;
+import jars.Track;
 
 /**
  *

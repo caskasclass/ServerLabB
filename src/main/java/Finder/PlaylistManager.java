@@ -3,9 +3,9 @@ package Finder;
 import SQLBuilder.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import pkg.Playlist;
-import pkg.Track;
-import pkg.User;
+import jars.Playlist;
+import jars.Track;
+import jars.User;
 
 /**
  *

@@ -4,7 +4,7 @@ import SQLBuilder.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
-import pkg.User;
+import jars.User;
 
 /**
  *
@@ -57,10 +57,11 @@ public class UserManager implements UserManagerInterface {
 
     //metodo per la registrazione
     @Override
-    public void registration(User u) { //viene passato un utente
+    public boolean registration(User u) { //viene passato un utente
         this.sqlinserter.renewQuery();
         //costruzione delle liste che contengono i nomi delle colonne ed i loro valori
         ArrayList<String> column = new ArrayList<String>();
+        System.out.println("funziona2");
         column.add("userid");
         column.add("name");
         column.add("surname");
@@ -70,7 +71,9 @@ public class UserManager implements UserManagerInterface {
         column.add("city");
         column.add("mail");
         column.add("password");
+        System.out.println("funziona3");
         ArrayList<String> values = new ArrayList<String>();
+        System.out.println("funziona4");
         values.add(u.getUserid());
         values.add(u.getName());
         values.add(u.getSurname());
@@ -79,12 +82,18 @@ public class UserManager implements UserManagerInterface {
         values.add("" + u.getCap());
         values.add(u.getCity());
         values.add(u.getMail());
-        values.add(encrypt(u.getPsw(), KEY)); //la password viene crittata prima di essere aggiunta
+        values.add(encrypt(u.getPsw(), KEY));
+        System.out.println("funziona5");
+        //la password viene crittata prima di essere aggiunta
         //settaggio delle colonne e dei valori
         this.sqlinserter.setColums(column);
+        System.out.println("funziona6");
         this.sqlinserter.setValues(values);
-        this.sqlinserter.setQuery("registrated_users"); //settaggio della query
-        this.sqlinserter.executeQuery(); //esecuzione della query
+        System.out.println("funziona7");
+        this.sqlinserter.setQuery("registrated_users");
+        System.out.println("funziona8"); //settaggio della query
+        return this.sqlinserter.executeQuery();
+         //esecuzione della query
     }
 
     //metodo per l'accesso di un utente
