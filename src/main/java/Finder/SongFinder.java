@@ -17,45 +17,60 @@ import jars.TrackDetails;
  * @version 1.0
  */
 
-/*
- * Classe che modella gli oggetti per la ricerca delle tracce all'interno del database
+/**
+ * Classe che modella gli oggetti per la ricerca delle tracce all'interno del database.
  */
 public class SongFinder implements SongFinderInterface {
 
-    private SQLFinder dbmanager; // oggetto in grado di ricercare dati
-    private ArrayList<Track> res; // lista che contiene i risultati
-    private ArrayList<String> trackId; // lista che contiene solo i trackId
-    private String[] searchCriteria; // criteri di ricerca
+    /** Oggetto in grado di ricercare dati. */
+    private SQLFinder dbmanager;
+    /** Lista che contiene i risultati. */
+    private ArrayList<Track> res;
+    /** Lista che contiene solo i trackId. */
+    private ArrayList<String> trackId;
+    /** Criteri di ricerca. */
+    private String[] searchCriteria;
 
-    // costruttore in caso di ricerca pr titolo
+    /**
+     * Costruttore in caso di ricerca per titolo.
+     * @param title Titolo della canzone.
+     */
     public SongFinder(String title) {
         this.dbmanager = new SQLFinder();
         this.res = new ArrayList<Track>();
         this.trackId = new ArrayList<String>();
-        this.searchCriteria = new String[1]; // l'array ha un elemento ed è solo il titolo della canzone
+        this.searchCriteria = new String[1]; // L'array ha un elemento ed è solo il titolo della canzone
         this.searchCriteria[0] = title;
     }
 
-    // costruttore in caso di ricerca per artista e anno
+    /**
+     * Costruttore in caso di ricerca per artista e anno.
+     * @param artist Nome dell'artista.
+     * @param year Anno di pubblicazione.
+     */
     public SongFinder(String artist, int year) {
         this.dbmanager = new SQLFinder();
         this.res = new ArrayList<Track>();
         this.trackId = new ArrayList<String>();
-        this.searchCriteria = new String[2]; // l'array ha due elementi e sono inizializzati ad autore ed anno
+        this.searchCriteria = new String[2]; // L'array ha due elementi e sono inizializzati ad autore ed anno
         this.searchCriteria[0] = artist;
         this.searchCriteria[1] = "" + year;
     }
 
-    // costruttore in caso mi servano tutte le tracce del db
+    /**
+     * Costruttore nel caso mi servano tutte le tracce del database.
+     */
     public SongFinder() {
         this.dbmanager = new SQLFinder();
         this.trackId = new ArrayList<String>();
         this.res = new ArrayList<Track>();
-        this.searchCriteria = null; // i criteri di ricerca non sono necessari
+        this.searchCriteria = null; // I criteri di ricerca non sono necessari
     }
 
-    // costruttore nel caso si voglia ricercare tutte le informazioni di una lista
-    // di tracce
+    /**
+     * Costruttore nel caso si voglia ricercare tutte le informazioni di una lista di tracce.
+     * @param trackId Lista di trackId.
+     */
     public SongFinder(ArrayList<String> trackId) {
         this.dbmanager = new SQLFinder();
         this.res = new ArrayList<Track>();
@@ -63,50 +78,65 @@ public class SongFinder implements SongFinderInterface {
         this.searchCriteria = null;
     }
 
+    /**
+     * Imposta i criteri di ricerca.
+     * @param title Titolo della canzone.
+     */
     @Override
-    public void setSearchCriteria(String title) { // nel caso si voglia cambiare il criterio di ricerca
+    public void setSearchCriteria(String title) {
         this.searchCriteria = new String[1];
         this.searchCriteria[0] = title;
     }
 
+    /**
+     * Imposta i criteri di ricerca.
+     * @param artist Nome dell'artista.
+     * @param year Anno di pubblicazione.
+     */
     @Override
-    public void setSearchCriteria(String artist, int year) { // nel caso si voglia cambiare il cirterio di ricerca
+    public void setSearchCriteria(String artist, int year) {
         this.searchCriteria = new String[2];
         this.searchCriteria[0] = artist;
         this.searchCriteria[1] = "" + year;
     }
 
+    /**
+     * Metodo per l'ottenimento di tutti i primi 20 trackId del database in ordine di popolarità.
+     * @return Lista di trackId.
+     */
     @Override
-    //metodo per l'ottenimento di tutti i primi 20 trackid del database in ordine di popolarità
     public ArrayList<String> getAllTrackId() {
-        this.dbmanager.renewQuery(); //rinnovamento della query
-        this.dbmanager.renewResultSet(); //rinnovamento dei risultati
-        //settaggio della query
+        this.dbmanager.renewQuery(); // Rinnovamento della query
+        this.dbmanager.renewResultSet(); // Rinnovamento dei risultati
+        // Settaggio della query
         this.dbmanager.setQuery("track_id", "tracks ORDER BY popolarity DESC LIMIT 20");
-        this.dbmanager.executeQuery(); //esecuzione della query
+        this.dbmanager.executeQuery(); // Esecuzione della query
         try {
-            while (this.dbmanager.getRes().next()) { // cicla finchè ci sono risultati
-                this.trackId.add(this.dbmanager.getRes().getString("track_id")); // ottenimento del trackId
+            while (this.dbmanager.getRes().next()) { // Cicla finché ci sono risultati
+                this.trackId.add(this.dbmanager.getRes().getString("track_id")); // Ottenimento del trackId
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        //restituzione dei trackId
+        // Restituzione dei trackId
         return trackId;
     }
 
+    /**
+     * Metodo per l'ottenimento dei trackId tramite ricerca.
+     * @return Lista di trackId.
+     */
     @Override
-    //metodo per l'ottenimento dei trackid tramite ricerca
     public ArrayList<String> getTrackId() {
-        this.dbmanager.renewQuery(); //rinnovamento della query
-        this.dbmanager.renewResultSet(); //rinnovamento del resultset
-        //se i parametri di ricerca sono due si cerca per autore e data, altrimenti per titolo
+        this.dbmanager.renewQuery(); // Rinnovamento della query
+        this.dbmanager.renewResultSet(); // Rinnovamento del resultset
+        // Se i parametri di ricerca sono due si cerca per autore e data, altrimenti per titolo
         if (this.searchCriteria.length == 1) {
             this.dbmanager.setQuery("track_id", "tracks", "LOWER(name) LIKE LOWER('" + this.searchCriteria[0] + "%') LIMIT 20;");
             this.dbmanager.executeQuery();
             try {
-                while (this.dbmanager.getRes().next()) { //cicla finchè ci sono risultati
-                    this.trackId.add(this.dbmanager.getRes().getString("track_id")); //ottenimento dei trackid
+                while (this.dbmanager.getRes().next()) { // Cicla finché ci sono risultati
+                    this.trackId.add(this.dbmanager.getRes().getString("track_id")); // Ottenimento dei trackid
                 }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
@@ -154,29 +184,34 @@ public class SongFinder implements SongFinderInterface {
                 System.err.println(e.getMessage());
             }
         }
-        //ritorno dei risultati
+        // Ritorno dei risultati
         return this.trackId;
     }
 
+    /**
+     * Controlla se la lista con i trackid ha dei risultati.
+     * @return True se la lista è vuota, altrimenti false.
+     */
     @Override
-    // controlla se la lista con i trackid ha dei risultati
     public boolean checkResult() {
         return this.trackId.isEmpty();
     }
 
+    /**
+     * Ricerca di tutte le informazioni relative ad ogni trackId.
+     * @param begin Punto da dove iniziare.
+     * @param end Punto da dove finire.
+     * @return Lista di tracce.
+     */
     @Override
-    // ricerca di tutte le informazioni relative ad ogni trackId
-    public ArrayList<Track> getAllTrackInformation(int begin, int end) { // vengono passati il
-                                                                         // punto da dove
-                                                                         // iniziare e il punto da
-                                                                         // dove finire
+    public ArrayList<Track> getAllTrackInformation(int begin, int end) {
         this.dbmanager.renewResultSet();
-        if (this.checkResult()) { // se la lista è vuota viene interrotto il metodo
+        if (this.checkResult()) { // Se la lista è vuota viene interrotto il metodo
             return null;
         }
         ArrayList<Track> res = new ArrayList<Track>();
         try {
-            //ottenimento di tutte le infrmazioni relative alla traccia
+            // Ottenimento di tutte le infrmazioni relative alla traccia
             for (int i = begin; i < end; i++) {
                 Track t = new Track(null, null, 0, null, null, null, null, null);
                 this.dbmanager.renewQuery();
@@ -213,16 +248,19 @@ public class SongFinder implements SongFinderInterface {
                     String name = this.dbmanager.getRes().getString("name");
                     t.setArtist_name(name);
                 }
-                res.add(t); //aggiunta della traccia ai risultati
+                res.add(t); // Aggiunta della traccia ai risultati
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return res; // ritorno dei risultati
+        return res; // Ritorno dei risultati
     }
 
+    /**
+     * Metodo per l'ottenimento delle top 20 tracce presenti nel database.
+     * @return Lista di dettagli delle tracce.
+     */
     @Override
-    // metodo per l'ottenimento delle top 20 tracce presenti nel database 
     public ArrayList<TrackDetails> getTopTracks() {
         ArrayList<String> trackId = this.getAllTrackId();
         ArrayList<Track> tmp = this.getAllTrackInformation(0, trackId.size());

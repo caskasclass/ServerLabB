@@ -13,7 +13,7 @@ import jars.Playlist;
  * @version 1.0
  */
 
-/*
+/**
  * Oggetto che si occupa dell'aumento nel database del campo popolarity nella tabella playlist
  */
 
