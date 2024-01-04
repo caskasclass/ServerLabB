@@ -9,69 +9,84 @@ import jars.User;
 /**
  * Progetto laboratorio B: "Emotional Songs", anno 2022-2023
  * 
+ * Classe che modella oggetti in grado di inserire e leggere dalla tabella
+ * registrated_users.
+ * 
  * @author Beatrice Bastianello, matricola 751864, VA
  * @author Lorenzo Barbieri , matricola 748695, VA
  * @author Filippo Storti , matricola 749195, VA
  * @author Nazar Viytyuk, matricola 748964, VA
  * @version 1.0
  */
-
-/*
- * Classe che modella oggetti in grado di inserire e leggere dalla tabella
- * registrated_users
- */
 public class UserManager implements UserManagerInterface {
 
-    private SQLFinder sqlfinder; // oggetto in grado di cercare nella tabella
-    private SQLInserter sqlinserter; // oggetto in grado inserire nella tabella
-    private String[] searchCriteria; // criteri di ricerca
-    private static final int KEY = 5; // chiave per la crittazione della password
+    private SQLFinder sqlfinder; // Oggetto in grado di cercare nella tabella
+    private SQLInserter sqlinserter; // Oggetto in grado di inserire nella tabella
+    private String[] searchCriteria; // Criteri di ricerca
+    private static final int KEY = 5; // Chiave per la crittazione della password
 
-    // costruttore in caso di accesso
+    /**
+     * Costruttore per l'accesso.
+     * 
+     * @param strAccess Nome utente o indirizzo email per l'accesso
+     * @param psw       Password per l'accesso
+     */
     public UserManager(String strAccess, String psw) {
         this.sqlfinder = new SQLFinder();
         this.sqlinserter = null;
-        this.searchCriteria = new String[2]; // array con due elementi che contiene username o mail e password
+        this.searchCriteria = new String[2]; // Array con due elementi che contiene username o mail e password
         this.searchCriteria[0] = strAccess;
         this.searchCriteria[1] = psw;
     }
 
-    // costruttore nel caso di registrazione
+    /**
+     * Costruttore per la registrazione.
+     */
     public UserManager() {
         this.sqlfinder = new SQLFinder();
         this.sqlinserter = new SQLInserter();
         this.searchCriteria = null;
     }
 
-    // metodo per crittazione e decrittazione della password
-    private static String encrypt(String s, int key) { // riceve password e chiave
+    /**
+     * Metodo per crittazione e decrittazione della password.
+     * 
+     * @param s   Password da crittare o decrittare
+     * @param key Chiave per la crittazione
+     * @return Stringa crittata o decrittata
+     */
+    private static String encrypt(String s, int key) {
         StringBuilder res = new StringBuilder();
-        // ciclo che critta lettera per lettera
+        // Ciclo che critta lettera per lettera
         for (int i = 0; i < s.length(); i++) {
             char current = s.charAt(i);
-            if (!Character.isLetter(current)) { // se non è una lettera viene saltata
+            if (!Character.isLetter(current)) { // Se non è una lettera viene saltata
                 res.append(current);
                 continue;
             }
-            char cChar = (char) (current + key); // crittazione
-            // se si ha fatto il ciclo completo dell'alfabeto, si torna alla A
+            char cChar = (char) (current + key); // Crittazione
+            // Se si ha fatto il ciclo completo dell'alfabeto, si torna alla A
             if (Character.isLowerCase(current) && cChar > 'z') {
                 cChar = (char) (cChar - 26);
             } else if (Character.isUpperCase(current) && cChar > 'Z') {
                 cChar = (char) (cChar - 26);
             }
-            res.append(cChar); // aggiunta del carattere crittato
+            res.append(cChar); // Aggiunta del carattere crittato
         }
-        return res.toString(); // ritorno del risultato
+        return res.toString(); // Ritorno del risultato
     }
 
-    // metodo per la registrazione
+    /**
+     * Metodo per la registrazione di un utente.
+     * 
+     * @param u Oggetto User contenente le informazioni dell'utente da registrare
+     */
     @Override
-    public void registration(User u) { // viene passato un utente
-        // avviene il controllo che lo userid non sia già stato preso
+    public void registration(User u) {
+        // Controllo che lo userid non sia già stato preso
         this.sqlinserter.renewQuery();
         this.sqlfinder.renewResultSet();
-        // costruzione delle liste che contengono i nomi delle colonne ed i loro valori
+        // Costruzione delle liste che contengono i nomi delle colonne ed i loro valori
         ArrayList<String> column = new ArrayList<String>();
         column.add("userid");
         column.add("name");
@@ -91,34 +106,39 @@ public class UserManager implements UserManagerInterface {
         values.add("" + u.getCap());
         values.add(u.getCity());
         values.add(u.getMail());
-        values.add(encrypt(u.getPsw(), KEY)); // la password viene crittata prima di essere aggiunta
-        // settaggio delle colonne e dei valori
+        values.add(encrypt(u.getPsw(), KEY)); // La password viene crittata prima di essere aggiunta
+        // Settaggio delle colonne e dei valori
         this.sqlinserter.setColums(column);
         this.sqlinserter.setValues(values);
-        this.sqlinserter.setQuery("registrated_users"); // settaggio della query
-        this.sqlinserter.executeQuery(); // esecuzione della query
+        this.sqlinserter.setQuery("registrated_users"); // Settaggio della query
+        this.sqlinserter.executeQuery(); // Esecuzione della query
     }
 
-    // metodo per l'accesso di un utente
+    /**
+     * Metodo per l'accesso di un utente.
+     * 
+     * @return Oggetto User contenente le informazioni dell'utente se l'accesso è
+     *         riuscito, altrimenti null
+     */
     @Override
     public User access() {
-        this.sqlfinder.renewQuery(); // rinnovamento della query
-        this.sqlfinder.renewResultSet(); // rinnovamento dei risultati
+        this.sqlfinder.renewQuery(); // Rinnovamento della query
+        this.sqlfinder.renewResultSet(); // Rinnovamento dei risultati
         User u = null;
-        // se la stringa di accesso non contiene la @ si cerca per username, altrimenti
+        // Se la stringa di accesso non contiene la @ si cerca per username, altrimenti
         // per mail
         if (this.searchCriteria[0].contains("@")) {
-            // costruzione della query
+            // Costruzione della query
             this.sqlfinder.setQuery("*", "registrated_users", "mail = '" + this.searchCriteria[0] + "'");
         } else {
-            // costruzione della query
+            // Costruzione della query
             this.sqlfinder.setQuery("*", "registrated_users", "userid = '" + this.searchCriteria[0] + "'");
         }
-        this.sqlfinder.executeQuery(); // esecuzione della query
+        this.sqlfinder.executeQuery(); // Esecuzione della query
         try {
-            while (this.sqlfinder.getRes().next()) { // cicla finchè ci sono risultati
-                String cPassword = this.sqlfinder.getRes().getString("password"); // presa della password
-                // se la password inserita corrisponde a quella trovata decrittata, si procede
+            while (this.sqlfinder.getRes().next()) { // Cicla finchè ci sono risultati
+                String cPassword = this.sqlfinder.getRes().getString("password"); // Presa della password
+                // Se la password inserita corrisponde a quella trovata decrittata, si procede
                 // con la presa degli altri valori
                 if (this.searchCriteria[1].equals(encrypt(cPassword, 26 - KEY))) {
                     String userid = this.sqlfinder.getRes().getString("userid");
@@ -138,7 +158,12 @@ public class UserManager implements UserManagerInterface {
         return u;
     }
 
-    // metodo di utilità per la creazione di una password casuale
+    /**
+     * Metodo di utilità per la creazione di una password casuale.
+     * 
+     * @param length Lunghezza della password
+     * @return Stringa contenente la password generata
+     */
     public static String pswGenerator(int length) {
         StringBuilder res = new StringBuilder();
         String alphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -153,19 +178,22 @@ public class UserManager implements UserManagerInterface {
         return res.toString();
     }
 
+    /**
+     * Metodo usato in fase di registrazione per controllare se l'utente è già
+     * esistente.
+     * 
+     * @return ArrayList contenente gli userid degli utenti esistenti
+     */
     @Override
-    // metodo usato in fase di registrazione per controllare se l'utente
-    // è già esistente
     public ArrayList<String> findexExistingUsers() {
         try {
-            this.sqlfinder.renewQuery(); // rinnovamento della query
-            this.sqlfinder.renewResultSet(); // rinnovamento del resultset
-            this.sqlfinder.setQuery("userid, mail ", "registrated_users");
+            this.sqlfinder.renewQuery(); // Rinnovamento della query
+            this.sqlfinder.renewResultSet(); // Rinnovamento del resultset
+            this.sqlfinder.setQuery("userid", "registrated_users");
             this.sqlfinder.executeQuery();
             ArrayList<String> res = new ArrayList<String>();
             while (this.sqlfinder.getRes().next()) {
                 res.add(this.sqlfinder.getRes().getString("userid"));
-                res.add(this.sqlfinder.getRes().getString("mail"));
             }
             return res;
         } catch (SQLException e) {
@@ -175,3 +203,4 @@ public class UserManager implements UserManagerInterface {
     }
 
 }
+

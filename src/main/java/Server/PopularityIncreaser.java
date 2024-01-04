@@ -14,7 +14,7 @@ import SQLBuilder.SQLInserter;
  * @version 1.0
  */
 
-/*
+/**
  * Oggetto che si occupa dell'update del campo popolarity nel database della tabella tracks
  */
 
@@ -22,7 +22,7 @@ public class PopularityIncreaser extends Thread {
     private SQLInserter sqlinserter; // oggetto in grado di inserire i risultati
     private ArrayList<String> trackId; // lista dei trackId di cui aumentare la popolarità
 
-    // costruttore a cui viene solo passata la lista
+    /**  costruttore a cui viene solo passata la lista */
     public PopularityIncreaser(ArrayList<String> trackId) {
         this.sqlinserter = new SQLInserter();
         this.trackId = trackId;

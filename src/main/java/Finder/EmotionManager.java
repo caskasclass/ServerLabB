@@ -21,27 +21,34 @@ import jars.Track;
  * @version 1.0
  */
 
-/*
- * Gli oggetti modellati da questa classe si occupano dell'inserimento e della
- * lettura delle informazioni relative alle emozioni
- * legate dei brani.
+/**
+ * Gli oggetti modellati da questa classe si occupano dell'inserimento e della lettura delle informazioni relative alle emozioni legate dei brani.
  */
 public class EmotionManager implements EmotionManagerInterface {
 
-    private SQLFinder sqlfinder; // oggetto in gradi di trovare nelle tabelle
-    private SQLInserter sqlinserter; // oggetto in grado di inserire nelle tabelle
-    private ArrayList<EmotionEvaluation> res; // risultato di una query
-    private String searchCriteria; // criterio di ricerca
+    /** Oggetto in grado di trovare nelle tabelle. */
+    private SQLFinder sqlfinder;
+    /** Oggetto in grado di inserire nelle tabelle. */
+    private SQLInserter sqlinserter;
+    /** Risultato di una query. */
+    private ArrayList<EmotionEvaluation> res;
+    /** Criterio di ricerca. */
+    private String searchCriteria;
 
-    // costruttore in caso ricerca di dati
+    /**
+     * Costruttore nel caso di ricerca di dati.
+     * @param track Traccia per la quale si effettua la ricerca.
+     */
     public EmotionManager(Track track) {
         this.sqlfinder = new SQLFinder();
         this.sqlinserter = null;
         this.res = new ArrayList<EmotionEvaluation>();
-        this.searchCriteria = track.getTrack_id(); // criterio di ricerca settato con il track_id della traccia passata
+        this.searchCriteria = track.getTrack_id(); // Criterio di ricerca settato con il track_id della traccia passata
     }
 
-    // costruttore nel caso di inserimento
+    /**
+     * Costruttore nel caso di inserimento.
+     */
     public EmotionManager() {
         this.sqlfinder = null;
         this.sqlinserter = new SQLInserter();
@@ -49,21 +56,24 @@ public class EmotionManager implements EmotionManagerInterface {
         this.searchCriteria = null;
     }
 
-    // nel caso si voglia risettare il criterio di ricerca
+    /**
+     * Imposta il criterio di ricerca.
+     * @param searchCriteria Criterio di ricerca.
+     */
     @Override
     public void setSearchCriteria(String searchCriteria) {
         this.searchCriteria = searchCriteria;
     }
 
-    // metodo di inserimento di un'emozione
+    /**
+     * Metodo di inserimento di un'emozione.
+     * @param emotion Emozione da inserire.
+     */
     @Override
-    public void insertEmotions(EmotionEvaluation emotion) { // viene passata un'emozione che contiene già al suo interno
-                                                            // track_id e
-        // userid
-        this.sqlinserter.renewQuery(); // rinnovamento della query
-        ArrayList<String> column = new ArrayList<String>(); // lista che contiene i nomi delle colonne in cui inserire i
-                                                            // dati
-        // settaggio dei nomi
+    public void insertEmotions(EmotionEvaluation emotion) {
+        this.sqlinserter.renewQuery(); // Rinnovamento della query
+        ArrayList<String> column = new ArrayList<String>(); // Lista che contiene i nomi delle colonne in cui inserire i dati
+        // Settaggio dei nomi
         column.add("emotion");
         column.add("userid");
         column.add("track_id");
@@ -79,71 +89,77 @@ public class EmotionManager implements EmotionManagerInterface {
             values.add("" + emotion.getEmozione().get(s));
             this.sqlinserter.setColums(column);
             this.sqlinserter.setValues(values);
-            // settaggio della query
-            this.sqlinserter.setQuery("emotions"); // viene passato il nome della tabella in cui inserire
+            // Settaggio della query
+            this.sqlinserter.setQuery("emotions"); // Viene passato il nome della tabella in cui inserire
             this.sqlinserter.executeQuery();
-            this.sqlinserter.renewQuery(); // rinnovamento della query
+            this.sqlinserter.renewQuery(); // Rinnovamento della query
             values.clear();
         }
-
     }
 
+    /**
+     * Ottiene le emozioni di un utente per una traccia specifica.
+     * @param userId ID dell'utente.
+     * @return Emozioni dell'utente per la traccia specifica.
+     */
     @Override
-    public EmotionEvaluation getMyEmotions(String userId) { // siccome il costruttore ha già settato i criteri di
-                                                            // ricerca non viene
-        EmotionEvaluation emotion = null; // passato nulla
-        HashMap<String, Integer> emotions = new HashMap<>(); // passato nulla
-        this.sqlfinder.renewQuery(); // rinnovamento della query
-        this.sqlfinder.renewResultSet(); // rinnovamento dei risultati
-        // settaggio della query
+    public EmotionEvaluation getMyEmotions(String userId) {
+        EmotionEvaluation emotion = null; // Passato nulla
+        HashMap<String, Integer> emotions = new HashMap<>(); // Passato nulla
+        this.sqlfinder.renewQuery(); // Rinnovamento della query
+        this.sqlfinder.renewResultSet(); // Rinnovamento dei risultati
+        // Settaggio della query
         this.sqlfinder.setQuery("*", "emotions",
                 "track_id = '" + this.searchCriteria + "' and userid = '" + userId + "'");
         System.out.println("Questa è la query : " + this.sqlfinder.getQuery());
-        this.sqlfinder.executeQuery(); // esecuzione della query
-        ResultSet res = this.sqlfinder.getRes(); // risultati della query
+        this.sqlfinder.executeQuery(); // Esecuzione della query
+        ResultSet res = this.sqlfinder.getRes(); // Risultati della query
         try {
             if (res.next()) {
                 emotions.put(res.getString("emotion"), (int) res.getByte("points"));
-                while (this.sqlfinder.getRes().next()) { // ciclo finchè ci sono risultati
+                while (this.sqlfinder.getRes().next()) { // Ciclo finché ci sono risultati
                     String emozione = this.sqlfinder.getRes().getString("emotion");
                     byte points = this.sqlfinder.getRes().getByte("points");
-                    emotions.put(emozione, (int) points); // inserimento nella lista
+                    emotions.put(emozione, (int) points); // Inserimento nella lista
                 }
             } else {
-                // do nothing per ora
+                // Do nothing per ora
             }
-            emotion = new EmotionEvaluation(emotions, userId, this.searchCriteria, "Silence is golden"); // creazione
+            emotion = new EmotionEvaluation(emotions, userId, this.searchCriteria, "Silence is golden"); // Creazione
                                                                                                          // dell'oggetto
                                                                                                          // emozione
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        return emotion; // ritorno della lista
+        return emotion; // Ritorno della lista
     }
 
+    /**
+     * Ottiene tutte le emozioni associate a una traccia.
+     * @return Lista di dati per il grafico delle emozioni.
+     */
     @Override
     public ArrayList<ChartData> getAllEmotions() {
-        ArrayList<ChartData> listOfData = new ArrayList<ChartData>(); // lista di oggetti che contengono i dati per il
-        ChartData chartData; // grafico
-        this.sqlfinder.renewQuery(); // rinnovamento della query
-        this.sqlfinder.renewResultSet(); // rinnovamento dei risultati
-        // settaggio della query
+        ArrayList<ChartData> listOfData = new ArrayList<ChartData>(); // Lista di oggetti che contengono i dati per il grafico
+        ChartData chartData; // Grafico
+        this.sqlfinder.renewQuery(); // Rinnovamento della query
+        this.sqlfinder.renewResultSet(); // Rinnovamento dei risultati
+        // Settaggio della query
         this.sqlfinder.setQuery("emotion, AVG(points) AS average_rating, COUNT(*) AS total_ratings", "emotions",
                 "track_id = '" + this.searchCriteria + "' GROUP BY emotion");
         System.out.println("Questa è la query : " + this.sqlfinder.getQuery());
         this.sqlfinder.executeQuery();
         ResultSet res = sqlfinder.getRes();
         try {
-            while (res.next()) { // ciclo finchè ci sono risultati
+            while (res.next()) { // Ciclo finché ci sono risultati
                 chartData = new ChartData(res.getString("emotion"), res.getDouble("average_rating"),
                         res.getInt("total_ratings"));
-                listOfData.add(chartData); // inserimento nella lista
+                listOfData.add(chartData); // Inserimento nella lista
             }
         } catch (SQLException e) {
-          System.err.println("Qualcosa è andato storto...\n"+e.getMessage());
-        } 
-
+            System.err.println("Qualcosa è andato storto...\n" + e.getMessage());
+        }
         return listOfData;
     }
 }
