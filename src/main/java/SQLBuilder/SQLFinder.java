@@ -46,8 +46,8 @@ public class SQLFinder implements SQLFinderInterface {
     // costruttore in caso della connessione standard
     public SQLFinder() {
         try {
-            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/EmotionalSongs", "postgres",
-                    "5640");
+            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/LabDB", "postgres",
+                    "postgres");
         } catch (SQLException e) {
             System.err.println("Database connection failed");
             return;

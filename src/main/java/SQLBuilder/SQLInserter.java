@@ -44,8 +44,8 @@ public class SQLInserter implements SQLInserterInterface {
     // costruttore nel caso di connessione standard
     public SQLInserter() {
         try {
-            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/EmotionalSongs", "postgres",
-                    "5640");
+            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/LabDB", "postgres",
+                    "postgres");
         } catch (SQLException e) {
             System.err.println("Database connection failed");
         }

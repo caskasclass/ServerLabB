@@ -1,0 +1,17 @@
+SQLBuilder\SQLFinder.class
+SQLBuilder\SQLInserter.class
+Finder\PlaylistManager.class
+SQLBuilder\SQLInserterInterface.class
+Finder\SongFinderInterface.class
+Server\Server.class
+UserManager\UserManager.class
+Finder\PlaylistManagerInterface.class
+Finder\AlbumFinderInterface.class
+Server\PopularityIncreaser.class
+Finder\SongFinder.class
+Server\PlaylistPopularityIncreaser.class
+SQLBuilder\SQLFinderInterface.class
+Finder\EmotionManager.class
+Finder\EmotionManagerInterface.class
+Finder\AlbumFinder.class
+UserManager\UserManagerInterface.class

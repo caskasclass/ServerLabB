@@ -160,11 +160,12 @@ public class UserManager implements UserManagerInterface {
         try {
             this.sqlfinder.renewQuery(); // rinnovamento della query
             this.sqlfinder.renewResultSet(); // rinnovamento del resultset
-            this.sqlfinder.setQuery("userid", "registrated_users");
+            this.sqlfinder.setQuery("userid, mail ", "registrated_users");
             this.sqlfinder.executeQuery();
             ArrayList<String> res = new ArrayList<String>();
             while (this.sqlfinder.getRes().next()) {
                 res.add(this.sqlfinder.getRes().getString("userid"));
+                res.add(this.sqlfinder.getRes().getString("mail"));
             }
             return res;
         } catch (SQLException e) {
