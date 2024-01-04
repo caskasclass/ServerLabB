@@ -4,11 +4,21 @@ import SQLBuilder.SQLFinder;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import jars.*;
+import jars.Album;
+import jars.Artist;
 
 /**
- *
- * @author lorenzo
+ * Progetto laboratorio B: "Emotional Songs", anno 2022-2023
+ * 
+ * @author Beatrice Bastianello, matricola 751864, VA
+ * @author Lorenzo Barbieri  , matricola 748695, VA
+ * @author Filippo Storti , matricola 749195, VA
+ * @author Nazar Viytyuk, matricola 748964, VA
+ * @version 1.0
+ */
+
+/*
+ * Gli oggetti modellati da questa classe si occupano della ricerca nel database degli album e solo dell'ottenimento delle informazioni relative ad essi.
  */
 public class AlbumFinder implements AlbumFinderInterface {
 
@@ -68,14 +78,15 @@ public class AlbumFinder implements AlbumFinderInterface {
             this.dbmanager.setQuery("album_id", "albums", "album_name = '" + this.searchCriteria[0] + "';");
         } else {
             // costruzione della query con SELECT, FROM, WHERE separati
-            this.dbmanager.setSelect("album_id");
+            this.dbmanager.setSelect("albums.album_id");
             this.dbmanager.setFrom("albums\n"
-                    + "join artist_mapping_album on albums.album_id = artist_mapping_album.album_id"
-                    + "join artists on artist_mapping_album.artist_id = artists.artist_id");
-            this.dbmanager.setWhere("artists.name = '" + this.searchCriteria[0] + "' and albums.release_date between '"
-                    + this.searchCriteria[1] + "'-01-01' AND " + this.searchCriteria[1] + "-12-31';");
+                    + "JOIN artist_mapping_album ON albums.album_id = artist_mapping_album.album_id\n"
+                    + "JOIN artists ON artist_mapping_album.artist_id = artists.artist_id");
+            this.dbmanager.setWhere("LOWER(artists.name) LIKE LOWER('" + this.searchCriteria[0] + "%') AND albums.release_date between '"
+                    + this.searchCriteria[1] + "-01-01' AND '" + this.searchCriteria[1] + "-12-31' LIMIT 20;");
         }
-        this.dbmanager.executeQuery(); // esecuzione della query
+        //esecuzione della query
+        this.dbmanager.executeQuery();
         try {
             while (this.dbmanager.getRes().next()) { // ciclo finchè ci sono risultati nella query
                 String album_id = this.dbmanager.getRes().getString("album_id"); // ottenimento del valore dell'album_id
@@ -92,7 +103,7 @@ public class AlbumFinder implements AlbumFinderInterface {
         return this.albumId.isEmpty(); // controllo se la lista con gli album_id di quella ricerca sono vuoti
     }
 
-    // il metodo prende la lista dei trackId, non serve passarla perchè esiste un
+    // il metodo prende la lista degli albumId, non serve passarla perchè esiste un
     // costruttore apposito
     @Override
     public ArrayList<Album> getAllAlbumInformation(int begin, int end) { // si sceglie da che albumId iniziare e a quale
@@ -104,7 +115,7 @@ public class AlbumFinder implements AlbumFinderInterface {
         for (int i = begin; i < end; i++) { // scorrimento di tutti i trackId da begin a end
             this.dbmanager.renewQuery(); // rinnovo della query
             // costruzione della query con SELECT, FROM, WHERE separati
-            this.dbmanager.setSelect("albums.*, artist.*");
+            this.dbmanager.setSelect("albums.*, artists.*");
             this.dbmanager.setFrom("albums\n"
                     + "JOIN artist_mapping_album ON albums.album_id = artist_mapping_album.album_id\n"
                     + "JOIN artists ON artist_mapping_album.artist_id = artists.artist_id");

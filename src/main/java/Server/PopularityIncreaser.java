@@ -4,12 +4,26 @@ import java.util.ArrayList;
 
 import SQLBuilder.SQLInserter;
 
-public class PopolarityIncreaser extends Thread {
+/**
+ * Progetto laboratorio B: "Emotional Songs", anno 2022-2023
+ * 
+ * @author Beatrice Bastianello, matricola 751864, VA
+ * @author Lorenzo Barbieri  , matricola 748695, VA
+ * @author Filippo Storti , matricola 749195, VA
+ * @author Nazar Viytyuk, matricola 748964, VA
+ * @version 1.0
+ */
+
+/*
+ * Oggetto che si occupa dell'update del campo popolarity nel database della tabella tracks
+ */
+
+public class PopularityIncreaser extends Thread {
     private SQLInserter sqlinserter; // oggetto in grado di inserire i risultati
     private ArrayList<String> trackId; // lista dei trackId di cui aumentare la popolarità
 
     // costruttore a cui viene solo passata la lista
-    public PopolarityIncreaser(ArrayList<String> trackId) {
+    public PopularityIncreaser(ArrayList<String> trackId) {
         this.sqlinserter = new SQLInserter();
         this.trackId = trackId;
         this.run();

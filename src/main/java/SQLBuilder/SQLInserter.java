@@ -6,8 +6,18 @@ import java.util.ArrayList;
 import jars.Playlist;
 
 /**
- *
- * @author lorenzo
+ * Progetto laboratorio B: "Emotional Songs", anno 2022-2023
+ * 
+ * @author Beatrice Bastianello, matricola 751864, VA
+ * @author Lorenzo Barbieri  , matricola 748695, VA
+ * @author Filippo Storti , matricola 749195, VA
+ * @author Nazar Viytyuk, matricola 748964, VA
+ * @version 1.0
+ */
+
+/*
+ * Classe che modella oggetti in grado di inserire nel database delle
+ * informazioni oppure di aggiornarne altre
  */
 public class SQLInserter implements SQLInserterInterface {
 
@@ -34,8 +44,8 @@ public class SQLInserter implements SQLInserterInterface {
     // costruttore nel caso di connessione standard
     public SQLInserter() {
         try {
-            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/emotionalsongs", "postgres",
-                    "");
+            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/LabDB", "postgres",
+                    "postgres");
         } catch (SQLException e) {
             System.err.println("Database connection failed");
         }
@@ -56,14 +66,21 @@ public class SQLInserter implements SQLInserterInterface {
         this.executeQuery();
     }
 
+    // metodo per l'aumento della popolarità della playlist
     public void updatePlaylistPopolarity(Playlist p) {
-        //costruzione della query
-        for(int i = 0; i < p.getTrackList().size(); i++) {
-            this.query = "UPDATE playlist" 
-            + "SET popolarity = popolarity + 1"
-            + "WHERE title = '" + p.getTitle() + "' AND userid = '" + p.getUser() + "' AND trackId = '" + p.getTrackList().get(i) + "'";
+        // costruzione della query
+        for (int i = 0; i < p.getTrackList().size(); i++) {
+            this.query = "UPDATE playlist"
+                    + "SET popolarity = popolarity + 1"
+                    + "WHERE title = '" + p.getTitle() + "' AND userid = '" + p.getUser() + "' AND trackId = '"
+                    + p.getTrackList().get(i) + "'";
             this.executeQuery();
         }
+    }
+
+    // metodo per la cancellazione di elementi generici
+    public void delete(String from, String where) {
+        this.query = "DELETE FROM " + from + " WHERE " + where;
     }
 
     // metodo per il settaggio della query
@@ -97,7 +114,12 @@ public class SQLInserter implements SQLInserterInterface {
         this.query = this.query.replace("!", iValues);
     }
 
-    // metodo per verificare se un valore sia intero o no
+    // metodo per l'ottenimento della query
+    public String getQuery() {
+        return this.query;
+    }
+
+    // metodo di servizio per verificare se un valore sia intero o no
     private static boolean isInteger(String s) {
         try {
             Integer.parseInt(s);
@@ -109,15 +131,13 @@ public class SQLInserter implements SQLInserterInterface {
 
     // metodo per l'esecuzione della query
     @Override
-    public boolean executeQuery() {
+    public void executeQuery() {
         PreparedStatement ps;
         try {
             ps = this.conn.prepareStatement(this.query);
             ps.executeQuery();
-            return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return false;
         }
     }
 
