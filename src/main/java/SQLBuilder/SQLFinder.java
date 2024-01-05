@@ -2,6 +2,8 @@ package SQLBuilder;
 
 import java.sql.*;
 
+import Server.ConnectionPool;
+
 /**
  *
  * @author lorenzo
@@ -45,12 +47,15 @@ public class SQLFinder implements SQLFinderInterface {
 
     // costruttore in caso della connessione standard
     public SQLFinder() {
-        try {
-            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/LabDB", "postgres",
-                    "postgres");
-        } catch (SQLException e) {
-            System.err.println("Database connection failed");
-            return;
+        boolean connected = false; // controllo di avvenuta connessione
+
+        while (!connected) { //cicla finchè non si connette
+            try {
+               this.conn = ConnectionPool.getConnection();
+                connected = true; // Connessione riuscita, usciamo dal ciclo
+            } catch (Exception e) {
+                System.err.println("Database connection failed, trying to reconnect");
+            }
         }
         // settaggio della query
         this.select = "SELECT ?\n";
@@ -83,6 +88,7 @@ public class SQLFinder implements SQLFinderInterface {
         this.from = "FROM ?\n";
         this.where = "WHERE ?\n";
     }
+
 
     // metodo per l'esecuzione della query
     @Override
@@ -128,6 +134,11 @@ public class SQLFinder implements SQLFinderInterface {
     @Override
     public String getQuery() {
         return this.select + this.from + this.where;
+    }
+
+    @Override
+    public void releaseConnection() {
+        ConnectionPool.releaseConnection(conn);
     }
 
 }

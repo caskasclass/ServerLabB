@@ -5,8 +5,7 @@ import java.rmi.server.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.rmi.registry.*;
-import java.sql.SQLException;
-import java.sql.ResultSet;
+
 import jars.*;
 import UserManager.*;
 import Finder.*;
@@ -53,9 +52,9 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     }
 
     @Override
-    public boolean registration(User u) {
+    public void registration(User u) {
         UserManager um = new UserManager();
-        return um.registration(u);
+        um.registration(u);
     }
 
     @Override
@@ -87,6 +86,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         EmotionManager em = new EmotionManager(track);
         return em.getMyEmotions(user_id);
     }
+
     @Override
     public ArrayList<ChartData> getAllEmotion(Track track) throws RemoteException {
         EmotionManager em = new EmotionManager(track);
@@ -138,7 +138,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 
     @Override
     public ArrayList<Playlist> getAllPlaylist() {
-        PlaylistManager pm = new PlaylistManager("","");
+        PlaylistManager pm = new PlaylistManager("", "");
         return pm.getAllPlaylist();
     }
 
@@ -148,45 +148,15 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         return sf.getAllTrackId();
     }
 
-<<<<<<< HEAD
-    public  ArrayList<TrackDetails> getTopTracks(){
-=======
     @Override
     public ArrayList<TrackDetails> getTopTracks() {
->>>>>>> d14d03d7c979dcf79ea316c3c9470a121f3de32f
         ArrayList<TrackDetails> topTracks = new ArrayList<TrackDetails>();
         SQLFinder dbmanager = new SQLFinder();
         dbmanager.renewQuery();
         dbmanager.renewResultSet();
-<<<<<<< HEAD
-        dbmanager.setQuery("*"," tracks join albums using (album_id) order by popularity DESC limit 50");
-        dbmanager.executeQuery();
-        try {
-            while (dbmanager.getRes().next()) { // cicla finchè ci sono risultati
-                ResultSet res = dbmanager.getRes();
-                System.out.println("Result set size "+res.getFetchSize());
-
-                // create  TrackDetails and add it to the list
-                Track track = new Track(res.getString("track_id"), res.getString("name"), res.getInt("duration_ms"), "Silence is golden", res.getString("album_name"), res.getString("album_img0"),res.getString("album_img1"),res.getString("album_img2"));
-                topTracks.add(new TrackDetails(track,res.getString("album_id")));
-            }
-            for (TrackDetails trackDetails : topTracks) {
-                System.out.println(trackDetails.track.getName()+" album id : "+trackDetails.albumId);
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        System.out.println("topTracks size: "+topTracks.size());
-        return topTracks;
-
-        
-    }
-    public static void main(String[] args) throws RemoteException {
-=======
         dbmanager.setQuery("*",
                 " tracks join albums using (album_id) where track_id in (SELECT track_id FROM tracks ORDER BY popolarity DESC LIMIT 50);");
         dbmanager.executeQuery();
->>>>>>> d14d03d7c979dcf79ea316c3c9470a121f3de32f
         try {
             while (dbmanager.getRes().next()) { // cicla finchè ci sono risultati
                 ResultSet res = dbmanager.getRes();
@@ -205,7 +175,14 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
             System.err.println(e.getMessage());
         }
         System.out.println("topTracks size: " + topTracks.size());
+        dbmanager.releaseConnection();
         return topTracks;
+    }
+
+    @Override
+    public ArrayList<CommentSection> getAllComments(Track arg0) throws RemoteException {
+        EmotionManager em = new EmotionManager(arg0);
+        return em.getAllComments();
     }
 
     @Override
@@ -214,7 +191,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         SQLFinder dbmanager = new SQLFinder();
         dbmanager.renewQuery();
         dbmanager.renewResultSet();
-        dbmanager.setQuery("count(*)","emotions where track_id = '" + trackid + "' and userid = '" + user_id + "'");
+        dbmanager.setQuery("count(*)", "emotions where track_id = '" + trackid + "' and userid = '" + user_id + "'");
         dbmanager.executeQuery();
         ResultSet res = dbmanager.getRes();
         // get the number of rows from the result set
@@ -224,14 +201,16 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
             int count = res.getInt(1);
             System.out.println("count: " + count);
             if (count > 0) {
+                dbmanager.releaseConnection();
                 return true;
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            
+
         }
+        dbmanager.releaseConnection();
         return false;
-    
+
     }
 
     @Override
@@ -272,9 +251,9 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
             System.err.println(e.getMessage());
         }
         System.out.println("topAlbums size: " + topAlbums.size());
+        dbmanager.releaseConnection();
         return topAlbums;
     }
-
 
     @Override
     public ArrayList<String> findexExistingUsers() throws RemoteException {
@@ -282,22 +261,23 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         return u.findexExistingUsers();
     }
 
-
     public static void main(String[] args) throws RemoteException {
 
+        ConnectionPool.initialize();
         try {
-            //ciclo per l'instanziazione dei vari oggetti su ogni porta che si trova nell'array PORT descritto nell'interfaccia ServerInterface
-            for (int i = 0; i < PORT.length; i++) { 
-                Registry r = LocateRegistry.createRegistry(ServerInterface.PORT[i]);
-                r.rebind("SERVER" + i, new Server());
-            }
-            //comunicazione dell'avvenuta creazione degli oggetti
+            // ciclo per l'instanziazione dei vari oggetti su ogni porta che si trova
+            // nell'array PORT descritto nell'interfaccia ServerInterface
+            // for (int i = 0; i < PORT.length; i++) {
+            Registry r = LocateRegistry.createRegistry(1099);
+            r.rebind("SERVER", new Server());
+            // }
+            // comunicazione dell'avvenuta creazione degli oggetti
             System.out.println("Server start correct");
-            //ciclo infinito per l'utilizzo di ogni oggetto
+            // ciclo infinito per l'utilizzo di ogni oggetto
             for (;;) {
             }
         } catch (Exception e) {
-            //gestione dell'eccezione nel caso si verifichi
+            // gestione dell'eccezione nel caso si verifichi
             System.out.println("Server start failed");
             System.out.println(e.getMessage());
             System.exit(0);

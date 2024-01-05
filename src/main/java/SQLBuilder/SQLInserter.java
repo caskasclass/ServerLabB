@@ -3,13 +3,14 @@ package SQLBuilder;
 import java.sql.*;
 import java.util.ArrayList;
 
+import Server.ConnectionPool;
 import jars.Playlist;
 
 /**
  * Progetto laboratorio B: "Emotional Songs", anno 2022-2023
  * 
  * @author Beatrice Bastianello, matricola 751864, VA
- * @author Lorenzo Barbieri  , matricola 748695, VA
+ * @author Lorenzo Barbieri , matricola 748695, VA
  * @author Filippo Storti , matricola 749195, VA
  * @author Nazar Viytyuk, matricola 748964, VA
  * @version 1.0
@@ -43,11 +44,16 @@ public class SQLInserter implements SQLInserterInterface {
 
     // costruttore nel caso di connessione standard
     public SQLInserter() {
-        try {
-            this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/LabDB", "postgres",
-                    "postgres");
-        } catch (SQLException e) {
-            System.err.println("Database connection failed");
+        boolean connected = false;
+
+        while (!connected) {
+            try {
+                this.conn = ConnectionPool.getConnection();
+                connected = true; // Connessione riuscita, usciamo dal ciclo
+            } catch (Exception e) {
+                System.err.println("Database connection failed");
+                System.err.println("Database connection failed, trying to reconnect");
+            }
         }
         // settaggio delle liste
         this.columns = new ArrayList<String>();
@@ -157,6 +163,11 @@ public class SQLInserter implements SQLInserterInterface {
     @Override
     public void setValues(ArrayList<String> ar) {
         this.values = ar;
+    }
+
+    @Override
+    public void releaseConnection() {
+        ConnectionPool.releaseConnection(conn);
     }
 
 }

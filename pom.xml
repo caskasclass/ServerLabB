@@ -14,6 +14,11 @@
             <version>42.6.0</version>
         </dependency>
         <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.1.0</version> <!-- Replace with the latest version -->
+        </dependency>
+        <dependency>
             <groupId>com.mycompany</groupId>
             <artifactId>jars</artifactId>
             <version>1.0</version>

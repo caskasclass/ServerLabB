@@ -67,12 +67,8 @@ public class UserManager implements UserManagerInterface {
 
     // metodo per la registrazione
     @Override
-<<<<<<< HEAD
-    public boolean registration(User u) { //viene passato un utente
-=======
     public void registration(User u) { // viene passato un utente
         // avviene il controllo che lo userid non sia già stato preso
->>>>>>> d14d03d7c979dcf79ea316c3c9470a121f3de32f
         this.sqlinserter.renewQuery();
         this.sqlfinder.renewResultSet();
         // costruzione delle liste che contengono i nomi delle colonne ed i loro valori

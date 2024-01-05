@@ -6,18 +6,17 @@ import SQLBuilder.SQLInserter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import jars.Emotion;
 import jars.Track;
 import java.util.HashMap;
-
 import jars.ChartData;
+import jars.CommentSection;
 import jars.EmotionEvaluation;
-import jars.Track;
+
 /**
  * Progetto laboratorio B: "Emotional Songs", anno 2022-2023
  * 
  * @author Beatrice Bastianello, matricola 751864, VA
- * @author Lorenzo Barbieri  , matricola 748695, VA
+ * @author Lorenzo Barbieri , matricola 748695, VA
  * @author Filippo Storti , matricola 749195, VA
  * @author Nazar Viytyuk, matricola 748964, VA
  * @version 1.0
@@ -77,7 +76,7 @@ public class EmotionManager implements EmotionManagerInterface {
             values.add(s);
             values.add(emotion.getUserid());
             values.add(emotion.getTrack_id());
-            values.add("Silence is golden");
+            values.add(emotion.getNote().get(s));
             values.add("" + emotion.getEmozione().get(s));
             this.sqlinserter.setColums(column);
             this.sqlinserter.setValues(values);
@@ -87,6 +86,7 @@ public class EmotionManager implements EmotionManagerInterface {
             this.sqlinserter.renewQuery(); // rinnovamento della query
             values.clear();
         }
+        sqlfinder.releaseConnection();
 
     }
 
@@ -94,7 +94,8 @@ public class EmotionManager implements EmotionManagerInterface {
     public EmotionEvaluation getMyEmotions(String userId) { // siccome il costruttore ha già settato i criteri di
                                                             // ricerca non viene
         EmotionEvaluation emotion = null; // passato nulla
-        HashMap<String, Integer> emotions = new HashMap<>(); // passato nulla
+        HashMap<String, Integer> emotions = new HashMap<>();
+        HashMap<String, String> emotionComments = new HashMap<>(); // passato nulla
         this.sqlfinder.renewQuery(); // rinnovamento della query
         this.sqlfinder.renewResultSet(); // rinnovamento dei risultati
         // settaggio della query
@@ -104,23 +105,21 @@ public class EmotionManager implements EmotionManagerInterface {
         this.sqlfinder.executeQuery(); // esecuzione della query
         ResultSet res = this.sqlfinder.getRes(); // risultati della query
         try {
-            if (res.next()) {
-                emotions.put(res.getString("emotion"), (int) res.getByte("points"));
-                while (this.sqlfinder.getRes().next()) { // ciclo finchè ci sono risultati
-                    String emozione = this.sqlfinder.getRes().getString("emotion");
-                    byte points = this.sqlfinder.getRes().getByte("points");
-                    emotions.put(emozione, (int) points); // inserimento nella lista
-                }
-            } else {
-                // do nothing per ora
+            while (this.sqlfinder.getRes().next()) { // ciclo finchè ci sono risultati
+                String emozione = this.sqlfinder.getRes().getString("emotion");
+                byte points = this.sqlfinder.getRes().getByte("points");
+                emotions.put(emozione, (int) points); // inserimento nella lista
+                emotionComments.put(emozione, this.sqlfinder.getRes().getString("notes"));
             }
-            emotion = new EmotionEvaluation(emotions, userId, this.searchCriteria, "Silence is golden"); // creazione
-                                                                                                         // dell'oggetto
-                                                                                                         // emozione
+
+            emotion = new EmotionEvaluation(emotions, userId, this.searchCriteria, emotionComments); // creazione
+                                                                                                     // dell'oggetto
+                                                                                                     // emozione
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+        sqlfinder.releaseConnection();
         return emotion; // ritorno della lista
     }
 
@@ -143,9 +142,42 @@ public class EmotionManager implements EmotionManagerInterface {
                 listOfData.add(chartData); // inserimento nella lista
             }
         } catch (SQLException e) {
-          System.err.println("Qualcosa è andato storto...\n"+e.getMessage());
-        } 
-
+            System.err.println("Qualcosa è andato storto...\n" + e.getMessage());
+        }
+        sqlfinder.releaseConnection();
         return listOfData;
+    }
+
+    // CascasCreationAbomination 2.0
+    @Override
+    public ArrayList<CommentSection> getAllComments() {
+        ArrayList<CommentSection> listOfComments = new ArrayList<CommentSection>(); // lista di oggetti che contengono
+                                                                                    // i commenti
+        CommentSection commentSection; // oggetto che contiene i commenti
+        this.sqlfinder.renewQuery(); // rinnovamento della query
+        this.sqlfinder.renewResultSet(); // rinnovamento dei risultati
+        // settaggio della query
+        this.sqlfinder.setQuery("emotion,userid, notes", "emotions",
+                "track_id = '" + this.searchCriteria+"'");
+        System.out.println("Questa è la query : " + this.sqlfinder.getQuery());
+        this.sqlfinder.executeQuery();
+        ResultSet res = sqlfinder.getRes();
+        try {
+            while (res.next()) { // ciclo finchè ci sono risultati
+                commentSection = new CommentSection(res.getString("emotion"), res.getString("userid"),
+                        res.getString("notes"));
+                listOfComments.add(commentSection); // inserimento nella lista
+            }
+        } catch (SQLException e) {
+            System.err.println("Qualcosa è andato storto...\n" + e.getMessage());
+        }
+         sqlfinder.releaseConnection();
+        return listOfComments;
+    }
+
+    // CascasCreationAbomination 2.0
+    @Override
+    public ArrayList<CommentSection> getMyComments(String userId) {
+        throw new UnsupportedOperationException("Unimplemented method 'getMyComments'");
     }
 }
