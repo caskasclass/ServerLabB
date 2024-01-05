@@ -3,6 +3,7 @@ package SQLBuilder;
 import java.sql.*;
 import java.util.ArrayList;
 
+import Server.ConnectionPool;
 import jars.Playlist;
 
 /**
@@ -54,9 +55,10 @@ public class SQLInserter implements SQLInserterInterface {
 
         while (!connected) {
             try {
-                this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/LabDB", "postgres", "postgres");
+                this.conn = ConnectionPool.getConnection();
                 connected = true; // Connessione riuscita, usciamo dal ciclo
-            } catch (SQLException e) {
+            } catch (Exception e) {
+                System.err.println("Database connection failed");
                 System.err.println("Database connection failed, trying to reconnect");
             }
         }
@@ -208,4 +210,10 @@ public class SQLInserter implements SQLInserterInterface {
     public void setValues(ArrayList<String> ar) {
         this.values = ar;
     }
+
+    @Override
+    public void releaseConnection() {
+        ConnectionPool.releaseConnection(conn);
+    }
+
 }

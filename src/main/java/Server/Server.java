@@ -2,9 +2,10 @@ package Server;
 
 import java.rmi.*;
 import java.rmi.server.*;
-import java.rmi.registry.*;
-import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.rmi.registry.*;
+
 import jars.*;
 import UserManager.*;
 import Finder.*;
@@ -300,6 +301,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
             System.err.println(e.getMessage());
         }
         System.out.println("topTracks size: " + topTracks.size());
+        dbmanager.releaseConnection();
         return topTracks;
     }
 
@@ -312,6 +314,12 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
      * @throws RemoteException Lanciata in caso di errore nella gestione delle
      *                         operazioni remote.
      */
+    @Override
+    public ArrayList<CommentSection> getAllComments(Track arg0) throws RemoteException {
+        EmotionManager em = new EmotionManager(arg0);
+        return em.getAllComments();
+    }
+
     @Override
     public boolean checkIfRated(String trackid, String user_id) throws RemoteException {
 
@@ -328,11 +336,13 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
             int count = res.getInt(1);
             System.out.println("count: " + count);
             if (count > 0) {
+                dbmanager.releaseConnection();
                 return true;
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+        dbmanager.releaseConnection();
         return false;
 
     }
@@ -394,6 +404,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
             System.err.println(e.getMessage());
         }
         System.out.println("topAlbums size: " + topAlbums.size());
+        dbmanager.releaseConnection();
         return topAlbums;
     }
 
@@ -409,26 +420,24 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         return u.findexExistingUsers();
     }
 
-    /**
-     *
-     * @param args Argomenti da riga di comando (non utilizzati in questa
-     *             implementazione).
-     * @throws RemoteException Se si verifica un problema legato alla comunicazione
-     *                         durante l'esecuzione del metodo.
-     */
     public static void main(String[] args) throws RemoteException {
+
+        ConnectionPool.initialize();
         try {
-            // Ciclo per l'istanziazione di oggetti su ogni porta specificata nell'array
-            // PORT di ServerInterface
+            // ciclo per l'instanziazione dei vari oggetti su ogni porta che si trova
+            // nell'array PORT descritto nell'interfaccia ServerInterface
+            // for (int i = 0; i < PORT.length; i++) {
             Registry r = LocateRegistry.createRegistry(1099);
             r.rebind("SERVER", new Server());
+            // }
+            // comunicazione dell'avvenuta creazione degli oggetti
             System.out.println("Server avviato correttamente");
-            // Ciclo infinito per l'utilizzo continuo di ciascun oggetto
+            // ciclo infinito per l'utilizzo di ogni oggetto
             for (;;) {
             }
         } catch (Exception e) {
-            // Gestione delle eccezioni in caso di fallimento dell'avvio del server
-            System.out.println("Avvio del server fallito");
+            // gestione dell'eccezione nel caso si verifichi
+            System.out.println("Server start failed");
             System.out.println(e.getMessage());
             System.exit(0);
         }

@@ -88,6 +88,7 @@ public class UserManager implements UserManagerInterface {
         this.sqlfinder.renewResultSet();
         // Costruzione delle liste che contengono i nomi delle colonne ed i loro valori
         ArrayList<String> column = new ArrayList<String>();
+        System.out.println("funziona2");
         column.add("userid");
         column.add("name");
         column.add("surname");
@@ -97,7 +98,9 @@ public class UserManager implements UserManagerInterface {
         column.add("city");
         column.add("mail");
         column.add("password");
+        System.out.println("funziona3");
         ArrayList<String> values = new ArrayList<String>();
+        System.out.println("funziona4");
         values.add(u.getUserid());
         values.add(u.getName());
         values.add(u.getSurname());
@@ -109,6 +112,7 @@ public class UserManager implements UserManagerInterface {
         values.add(encrypt(u.getPsw(), KEY)); // La password viene crittata prima di essere aggiunta
         // Settaggio delle colonne e dei valori
         this.sqlinserter.setColums(column);
+        System.out.println("funziona6");
         this.sqlinserter.setValues(values);
         this.sqlinserter.setQuery("registrated_users"); // Settaggio della query
         this.sqlinserter.executeQuery(); // Esecuzione della query

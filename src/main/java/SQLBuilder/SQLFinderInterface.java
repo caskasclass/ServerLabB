@@ -1,5 +1,6 @@
 package SQLBuilder;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 
 /**
@@ -33,4 +34,6 @@ public interface SQLFinderInterface {
     ResultSet getRes(); 
 
     String getQuery();
+
+    void releaseConnection();
 }
