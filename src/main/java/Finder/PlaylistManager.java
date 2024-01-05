@@ -19,25 +19,32 @@ import jars.User;
  * @version 1.0
  */
 
-/*
- * Gli oggetti modellati da questa classe si occupano della gestione delle
- * playlist all'interno del database, sia inserimento, sia rimozione
- * che ricerca.
+/**
+ * Gli oggetti modellati da questa classe si occupano della gestione delle playlist all'interno del database, sia inserimento, sia rimozione che ricerca.
  */
 public class PlaylistManager implements PlaylistManagerInterface {
 
-    private SQLFinder sqlfinder; // oggetto in grado di trovare dati nel DB
-    private SQLInserter sqlinserter; // oggetto in grado di inserire dati nel DB
-    private Playlist res; // contiene la playlist risultato
-    private ArrayList<String> trackId; // lista che contiene  i risultati degli id univoci per ciascuna tabella
-    private String[] searchCriteria; // criteri di ricerca
+    /** Oggetto in grado di trovare dati nel DB. */
+    private SQLFinder sqlfinder;
+    /** Oggetto in grado di inserire dati nel DB. */
+    private SQLInserter sqlinserter;
+    /** Contiene la playlist risultato. */
+    private Playlist res;
+    /** Lista che contiene i risultati degli id univoci per ciascuna tabella. */
+    private ArrayList<String> trackId;
+    /** Criteri di ricerca. */
+    private String[] searchCriteria;
 
-    // costruttore nel caso si voglia cercare a partire da un utente ed un titolo
+    /**
+     * Costruttore nel caso si voglia cercare a partire da un utente ed un titolo.
+     * @param title Titolo della playlist.
+     * @param user ID dell'utente.
+     */
     public PlaylistManager(String title, String user) {
         this.sqlfinder = new SQLFinder();
         this.res = null;
         this.trackId = new ArrayList<String>();
-        this.searchCriteria = new String[2]; // settaggio dei criteri a titolo della playlist e userid
+        this.searchCriteria = new String[2]; // Settaggio dei criteri a titolo della playlist e userid
         if (user != null) {
             this.searchCriteria[0] = title;
             this.searchCriteria[1] = user;
@@ -48,7 +55,10 @@ public class PlaylistManager implements PlaylistManagerInterface {
         this.sqlinserter = null;
     }
 
-    public PlaylistManager() { // costruttore nel caso si voglia inserire una playlist
+    /**
+     * Costruttore nel caso si voglia inserire una playlist.
+     */
+    public PlaylistManager() {
         this.sqlfinder = new SQLFinder();
         this.res = null;
         this.trackId = null;
@@ -56,9 +66,11 @@ public class PlaylistManager implements PlaylistManagerInterface {
         this.searchCriteria = null;
     }
 
-    public PlaylistManager(ArrayList<String> trackId) { // costruttore nel caso si abbia già una playlist "attiva" e si
-                                                        // vogliano trovare tutte le informazioni relative a quelle
-                                                        // tracce
+    /**
+     * Costruttore nel caso si abbia già una playlist "attiva" e si vogliano trovare tutte le informazioni relative a quelle tracce.
+     * @param trackId Lista di trackId.
+     */
+    public PlaylistManager(ArrayList<String> trackId) {
         this.sqlfinder = new SQLFinder();
         this.res = null;
         this.trackId = trackId;
@@ -66,103 +78,121 @@ public class PlaylistManager implements PlaylistManagerInterface {
         this.searchCriteria = null;
     }
 
+    /**
+     * Imposta i criteri di ricerca.
+     * @param title Titolo della playlist.
+     * @param user ID dell'utente.
+     */
     @Override
-    public void setSearchCriteria(String title, String user) { // nel caso si vogliano risettare i criteri di ricerca
+    public void setSearchCriteria(String title, String user) {
         this.searchCriteria[0] = title;
         this.searchCriteria[1] = user;
     }
 
+    /**
+     * Metodo per cercare una playlist.
+     * @return Playlist risultato.
+     */
     @Override
-    // metodo per cercare una playlist
     public Playlist getPlaylist() {
-        this.sqlfinder.renewQuery(); // rinnovamento della query
-        this.sqlfinder.renewResultSet(); // rinnovamento dei risultati
-        // costruzione della query
+        this.sqlfinder.renewQuery(); // Rinnovamento della query
+        this.sqlfinder.renewResultSet(); // Rinnovamento dei risultati
+        // Costruzione della query
         this.sqlfinder.setQuery("track_id, image", "playlist",
                 "LOWER(title) = LOWER('" + this.searchCriteria[0] + "') AND LOWER(userid) = LOWER('"
                         + this.searchCriteria[1] + "');");
-        this.sqlfinder.executeQuery(); // esecuzione della query
+        this.sqlfinder.executeQuery(); // Esecuzione della query
         try {
             String img = null;
             
-            while (this.sqlfinder.getRes().next()) { // ciclo finchè ci sono risultati
+            while (this.sqlfinder.getRes().next()) { // Ciclo finché ci sono risultati
                 String trackId = this.sqlfinder.getRes().getString("track_id");
-                img = this.sqlfinder.getRes().getString("image");// ottenimento del trackId
-                this.trackId.add(trackId); // aggiunta alla lista
+                img = this.sqlfinder.getRes().getString("image");// Ottenimento del trackId
+                this.trackId.add(trackId); // Aggiunta alla lista
             }
-            // costruzione della playlist risultato
+            // Costruzione della playlist risultato
             this.res = new Playlist(this.searchCriteria[0], this.trackId, img, this.searchCriteria[1]);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        return this.res; // ritorno della playlist
+        return this.res; // Ritorno della playlist
     }
 
+    /**
+     * Ricerca di tutte le informazioni di una playlist.
+     * @param ar Lista di trackId.
+     * @param begin Indice di inizio.
+     * @param end Indice di fine.
+     * @return Lista di tracce.
+     */
     @Override
-    // ricerca di tutte le informazioni di una playlist (vedere
-    // SongFinder.getAllTracInformation per i dettagli)
     public ArrayList<Track> getAllTrackInformation(ArrayList<String> ar, int begin, int end) {
         SongFinder sf = new SongFinder(ar);
         return sf.getAllTrackInformation(begin, end);
     }
 
+    /**
+     * Metodo per creare una playlist.
+     * @param p Playlist da creare.
+     */
     @Override
-    // metodo per creare una playlist
-    public void createPlaylist(Playlist p) { // prende una playlist
-        // controlla se la playlist è vuota, se è così interrompe e stampa l'errore
+    public void createPlaylist(Playlist p) {
+        // Controlla se la playlist è vuota, se è così interrompe e stampa l'errore
         if (p.getTrackList().isEmpty()) {
             System.err.println("Playlist is empty");
             return;
         }
-        ArrayList<String> column = new ArrayList<String>(); // lista che conterrà i nomi delle colonne
-        // settaggio dei nomi delle colonne
+        ArrayList<String> column = new ArrayList<String>(); // Lista che conterrà i nomi delle colonne
+        // Settaggio dei nomi delle colonne
         column.add("userid");
         column.add("title");
         column.add("track_id");
         column.add("image");
         this.sqlinserter.setColums(column);
         ArrayList<String> values = null;
-        for (int i = 0; i < p.getTrackList().size(); i++) { // cicla tutti i trackId presenti nella playlist
+        for (int i = 0; i < p.getTrackList().size(); i++) { // Cicla tutti i trackId presenti nella playlist
             values = new ArrayList<String>();
             values.add(p.getUser());
             values.add(p.getTitle());
-            values.add(p.getTrackList().get(i)); // prese del valore del trackId corrente ed aggiunta alla lista
+            values.add(p.getTrackList().get(i)); // Prese del valore del trackId corrente ed aggiunta alla lista
             values.add(p.getImage());
             this.sqlinserter.renewQuery();
-            this.sqlinserter.setValues(values); // settaggio della lista dei valori
-            this.sqlinserter.setQuery("playlist"); // settaggio della query con nome della tabella in cui inserire
-            this.sqlinserter.executeQuery(); // esecuzione della query
+            this.sqlinserter.setValues(values); // Settaggio della lista dei valori
+            this.sqlinserter.setQuery("playlist"); // Settaggio della query con nome della tabella in cui inserire
+            this.sqlinserter.executeQuery(); // Esecuzione della query
         }
     }
 
+    /**
+     * Metodo per ottenere tutte le playlist presenti nel database.
+     * @return Lista di playlist.
+     */
     @Override
-    // metodo per ottenere tutte le playlist presenti nel database
     public ArrayList<Playlist> getAllPlaylist() {
         try {
-            // lista per il contenimento dei risultati
+            // Lista per il contenimento dei risultati
             ArrayList<Playlist> res = new ArrayList<Playlist>();
-            // lista per il controllo delle playlist già ottenute
+            // Lista per il controllo delle playlist già ottenute
             ArrayList<String[]> counted = new ArrayList<String[]>();
-            this.sqlfinder.renewQuery(); // rinnovamento della query
-            this.sqlfinder.renewResultSet(); // rinnovamento dei risultati
-            this.sqlfinder.setQuery("*", "playlist"); // setteggio della query
-            this.sqlfinder.executeQuery(); // eseuzione della query
-            while (this.sqlfinder.getRes().next()) { // cicla finchè ci sono risultati
-                // ottenimento degli userid e del titolo della playlist che serviranno per la
-                // ricerca successiva
+            this.sqlfinder.renewQuery(); // Rinnovamento della query
+            this.sqlfinder.renewResultSet(); // Rinnovamento dei risultati
+            this.sqlfinder.setQuery("*", "playlist"); // Setteggio della query
+            this.sqlfinder.executeQuery(); // Esecuzione della query
+            while (this.sqlfinder.getRes().next()) { // Cicla finché ci sono risultati
+                // Ottenimento degli userid e del titolo della playlist che serviranno per la ricerca successiva
                 this.searchCriteria = new String[] { this.sqlfinder.getRes().getString("userid"),
                         this.sqlfinder.getRes().getString("title") };
                 String img = this.sqlfinder.getRes().getString("image");
-                // se la playlist non è già stata cercata
+                // Se la playlist non è già stata cercata
                 if (!this.contains(counted, this.searchCriteria)) {
-                    counted.add(this.searchCriteria); // aggiornamento delle playlist contate
-                    // aggiunta della playlist ai risultati
+                    counted.add(this.searchCriteria); // Aggiornamento delle playlist contate
+                    // Aggiunta della playlist ai risultati
                     res.add(new Playlist(this.searchCriteria[1],
                             this.getTrackList(this.searchCriteria[0], this.searchCriteria[1]), img,
                             this.searchCriteria[0]));
                 }
             }
-            // ritorno dei risultati
+            // Ritorno dei risultati
             return res;
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,8 +200,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
         }
     }
 
-    // metodo di servizio che controlla se è già presente la coppia userid + title è
-    // già presente nella lista passata
+    // Metodo di servizio che controlla se è già presente la coppia userid + title è già presente nella lista passata
     private boolean contains(ArrayList<String[]> ar, String[] s) {
         for (int i = 0; i < ar.size(); i++) {
             if (ar.get(i)[0].equals(s[0]) && ar.get(i)[1].equals(s[1])) {
@@ -181,7 +210,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
         return false;
     }
 
-    // metodo di servizio per l'ottenimento della tracklist legata ad una playlist
+    // Metodo di servizio per l'ottenimento della tracklist legata ad una playlist
     @Override
     public ArrayList<String> getTrackList(String userid, String title) {
         try {
@@ -206,16 +235,23 @@ public class PlaylistManager implements PlaylistManagerInterface {
         }
     }
 
+    /**
+     * Metodo per l'eliminazione di una playlist.
+     * @param p Playlist da eliminare.
+     */
     @Override
-    // metodo per l'eliminazione di una playlist
     public void deletePlayList(Playlist p) {
         this.sqlinserter.renewQuery();
         this.sqlinserter.delete("playlist", "userid = '" + p.getUser() + "' AND title = '" + p.getTitle() + "';");
         this.sqlinserter.executeQuery();
     }
 
+    /**
+     * Metodo per l'eliminazione di una singola traccia da una playlist.
+     * @param p Playlist.
+     * @param trackId Track ID.
+     */
     @Override
-    // metodo per l'eliminazione di una singola traccia da una playlist
     public void deleteTrack(Playlist p, String trackId) {
         this.sqlinserter.renewQuery();
         this.sqlinserter.delete("playlist",
