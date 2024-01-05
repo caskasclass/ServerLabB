@@ -56,8 +56,8 @@ public class SQLFinder implements SQLFinderInterface {
 
         while (!connected) {
             try {
-                this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/EmotionalSongs", "postgres",
-                        "5640");
+                this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/LabDB", "postgres",
+                        "postgres");
                 connected = true; // Connessione riuscita, usciamo dal ciclo
             } catch (SQLException e) {
                 System.err.println("Database connection failed, trying to reconnect");

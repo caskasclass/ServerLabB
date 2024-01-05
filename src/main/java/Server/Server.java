@@ -420,10 +420,8 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         try {
             // Ciclo per l'istanziazione di oggetti su ogni porta specificata nell'array
             // PORT di ServerInterface
-            for (int i = 0; i < PORT.length; i++) {
-                Registry r = LocateRegistry.createRegistry(ServerInterface.PORT[i]);
-                r.rebind("SERVER" + i, new Server());
-            }
+            Registry r = LocateRegistry.createRegistry(1099);
+            r.rebind("SERVER", new Server());
             System.out.println("Server avviato correttamente");
             // Ciclo infinito per l'utilizzo continuo di ciascun oggetto
             for (;;) {
