@@ -28,7 +28,6 @@ public interface EmotionManagerInterface {
 
     ArrayList<CommentSection> getAllComments();
 
-    ArrayList<CommentSection> getMyComments(String userId);
 
 
     

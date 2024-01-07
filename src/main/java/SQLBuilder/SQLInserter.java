@@ -28,9 +28,9 @@ public class SQLInserter implements SQLInserterInterface {
     /**
      * Costruttore per connessioni specifiche al database.
      *
-     * @param url URL del database
+     * @param url      URL del database
      * @param username Nome utente per la connessione al database
-     * @param psw Password per la connessione al database
+     * @param psw      Password per la connessione al database
      */
     public SQLInserter(String url, String username, String psw) {
         try {
@@ -78,10 +78,13 @@ public class SQLInserter implements SQLInserterInterface {
      */
     @Override
     public void updateTrackPopularity(String trackId) {
+        if(this.conn!=null)
+        this.releaseConnection();
         // Costruzione della query
         this.query = "UPDATE tracks SET popolarity = popolarity + 1 WHERE track_id = '" + trackId + "';";
         // Esecuzione della query
         this.executeQuery();
+        this.releaseConnection();
     }
 
     /**
@@ -90,6 +93,8 @@ public class SQLInserter implements SQLInserterInterface {
      * @param p Oggetto Playlist
      */
     public void updatePlaylistPopolarity(Playlist p) {
+        if(this.conn!=null)
+        this.releaseConnection();
         // Costruzione della query
         for (int i = 0; i < p.getTrackList().size(); i++) {
             this.query = "UPDATE playlist"
@@ -97,13 +102,14 @@ public class SQLInserter implements SQLInserterInterface {
                     + "WHERE title = '" + p.getTitle() + "' AND userid = '" + p.getUser() + "' AND trackId = '"
                     + p.getTrackList().get(i) + "'";
             this.executeQuery();
+            this.releaseConnection();
         }
     }
 
     /**
      * Metodo per la cancellazione di elementi generici.
      *
-     * @param from Nome della tabella da cui eliminare
+     * @param from  Nome della tabella da cui eliminare
      * @param where Condizione per la cancellazione
      */
     public void delete(String from, String where) {
@@ -119,7 +125,8 @@ public class SQLInserter implements SQLInserterInterface {
     public void setQuery(String tablename) {
         this.query = this.query.replace("%", tablename); // Settaggio del nome della tabella
         String iColumn = "", iValues = ""; // Stringhe che conterranno i valori delle rispettive liste
-        // I due cicli for successivi servono a evitare errori formali come virgole e virgolette
+        // I due cicli for successivi servono a evitare errori formali come virgole e
+        // virgolette
         for (int i = 0; i < columns.size(); i++) {
             if (i == columns.size() - 1) {
                 iColumn += columns.get(i);
@@ -174,10 +181,14 @@ public class SQLInserter implements SQLInserterInterface {
     @Override
     public void executeQuery() {
         PreparedStatement ps;
+        do { // cicla finchè non si connette
+            this.conn = ConnectionPool.getConnection();
+        } while (this.conn == null);
+
         try {
             ps = this.conn.prepareStatement(this.query);
             ps.executeQuery();
-        } catch (SQLException e) {
+        } catch (SQLException | IndexOutOfBoundsException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -213,7 +224,8 @@ public class SQLInserter implements SQLInserterInterface {
 
     @Override
     public void releaseConnection() {
-        ConnectionPool.releaseConnection(conn);
+        if(this.conn!=null)
+        ConnectionPool.releaseConnection(this.conn);
     }
 
 }

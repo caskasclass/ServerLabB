@@ -115,6 +115,7 @@ public class SongFinder implements SongFinderInterface {
             while (this.dbmanager.getRes().next()) { // Cicla finché ci sono risultati
                 this.trackId.add(this.dbmanager.getRes().getString("track_id")); // Ottenimento del trackId
             }
+            this.dbmanager.releaseConnection();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -138,6 +139,7 @@ public class SongFinder implements SongFinderInterface {
                 while (this.dbmanager.getRes().next()) { // Cicla finché ci sono risultati
                     this.trackId.add(this.dbmanager.getRes().getString("track_id")); // Ottenimento dei trackid
                 }
+                this.dbmanager.releaseConnection();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
@@ -150,6 +152,7 @@ public class SongFinder implements SongFinderInterface {
                 while (this.dbmanager.getRes().next()) {
                     artist_id = this.dbmanager.getRes().getString("artist_id");
                 }
+                this.dbmanager.releaseConnection();
 
                 this.dbmanager.renewQuery();
                 this.dbmanager.setQuery("album_id", "artist_mapping_album", "artist_id = '" + artist_id + "'");
@@ -159,7 +162,9 @@ public class SongFinder implements SongFinderInterface {
                 while (this.dbmanager.getRes().next()) {
                     tmp.add(this.dbmanager.getRes().getString("album_id"));
                 }
+                this.dbmanager.releaseConnection();
 
+                SQLFinder dbTmp2 = new SQLFinder();
                 for (int i = 0; i < tmp.size(); i++) {
                     this.dbmanager.renewQuery();
                     this.dbmanager.setQuery("release_date", "albums", "album_id = '" + tmp.get(i) + "'");
@@ -168,17 +173,19 @@ public class SongFinder implements SongFinderInterface {
                     while (this.dbmanager.getRes().next()) {
                         String sdate = this.dbmanager.getRes().getString("release_date");
                         String[] tmp2 = sdate.split("-");
-
+                       
                         if (tmp2[0].equals(this.searchCriteria[1])) {
-                            this.dbmanager.renewQuery();
-                            this.dbmanager.setQuery("track_id", "tracks", "album_id = '" + tmp.get(i) + "'");
-                            this.dbmanager.executeQuery();
+                            dbTmp2.renewQuery();
+                            dbTmp2.setQuery("track_id", "tracks", "album_id = '" + tmp.get(i) + "'");
+                            dbTmp2.executeQuery();
 
-                            while (this.dbmanager.getRes().next()) {
-                                this.trackId.add(this.dbmanager.getRes().getString("track_id"));
+                            while (dbTmp2.getRes().next()) {
+                                this.trackId.add(dbTmp2.getRes().getString("track_id"));
                             }
+                            dbTmp2.releaseConnection();
                         }
                     }
+                    this.dbmanager.releaseConnection();
                 }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
@@ -205,6 +212,7 @@ public class SongFinder implements SongFinderInterface {
      */
     @Override
     public ArrayList<Track> getAllTrackInformation(int begin, int end) {
+        System.out.println("\n*************** getAllTrackInformation ************\n");
         this.dbmanager.renewResultSet();
         if (this.checkResult()) { // Se la lista è vuota viene interrotto il metodo
             return null;
@@ -227,6 +235,8 @@ public class SongFinder implements SongFinderInterface {
                     t.setDuration(duration);
                     album_id = this.dbmanager.getRes().getString("album_id");
                 }
+                this.dbmanager.releaseConnection();
+
                 this.dbmanager.renewQuery();
                 this.dbmanager.setQuery("*", "albums", "album_id = '" + album_id + "';");
                 this.dbmanager.executeQuery();
@@ -240,6 +250,9 @@ public class SongFinder implements SongFinderInterface {
                     String album_img2 = this.dbmanager.getRes().getString("album_img2");
                     t.setAlbum_img2(album_img2);
                 }
+                this.dbmanager.releaseConnection();
+
+
                 this.dbmanager.renewQuery();
                 this.dbmanager.setQuery("artists.*", "albums NATURAL JOIN artist_mapping_album NATURAL JOIN artists",
                         "album_id = '" + album_id + "';");
@@ -248,11 +261,14 @@ public class SongFinder implements SongFinderInterface {
                     String name = this.dbmanager.getRes().getString("name");
                     t.setArtist_name(name);
                 }
+                this.dbmanager.releaseConnection();
+
                 res.add(t); // Aggiunta della traccia ai risultati
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+         System.out.println("\n*************** Fine getAllTrackInformation ************\n");
         return res; // Ritorno dei risultati
     }
 
@@ -275,6 +291,7 @@ public class SongFinder implements SongFinderInterface {
                     album_id = this.dbmanager.getRes().getString("album_id");
                 }
                 topTracks.add(new TrackDetails(tmp.get(i), album_id));
+                this.dbmanager.releaseConnection();
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
