@@ -82,7 +82,6 @@ public class EmotionManager implements EmotionManagerInterface {
         column.add("points");
         ArrayList<String> values = new ArrayList<String>();
         for (String s : emotion.getEmozione().keySet()) {
-            System.out.println(s);
             values.add(s);
             values.add(emotion.getUserid());
             values.add(emotion.getTrack_id());
@@ -93,10 +92,10 @@ public class EmotionManager implements EmotionManagerInterface {
             // Settaggio della query
             this.sqlinserter.setQuery("emotions"); // Viene passato il nome della tabella in cui inserire
             this.sqlinserter.executeQuery();
+            this.sqlinserter.releaseConnection();
             this.sqlinserter.renewQuery(); // Rinnovamento della query
             values.clear();
         }
-        sqlfinder.releaseConnection();
 
     }
 
@@ -118,7 +117,6 @@ public class EmotionManager implements EmotionManagerInterface {
                 "track_id = '" + this.searchCriteria + "' and userid = '" + userId + "'");
         System.out.println("Questa è la query : " + this.sqlfinder.getQuery());
         this.sqlfinder.executeQuery(); // Esecuzione della query
-        ResultSet res = this.sqlfinder.getRes(); // Risultati della query
         try {
             while (this.sqlfinder.getRes().next()) { // ciclo finchè ci sono risultati
                 String emozione = this.sqlfinder.getRes().getString("emotion");
@@ -126,7 +124,7 @@ public class EmotionManager implements EmotionManagerInterface {
                 emotions.put(emozione, (int) points); // inserimento nella lista
                 emotionComments.put(emozione, this.sqlfinder.getRes().getString("notes"));
             }
-
+            sqlfinder.releaseConnection();
             emotion = new EmotionEvaluation(emotions, userId, this.searchCriteria, emotionComments); // creazione
                                                                                                      // dell'oggetto
                                                                                                      // emozione
@@ -134,7 +132,6 @@ public class EmotionManager implements EmotionManagerInterface {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        sqlfinder.releaseConnection();
         return emotion; // ritorno della lista
     }
 
@@ -160,10 +157,10 @@ public class EmotionManager implements EmotionManagerInterface {
                         res.getInt("total_ratings"));
                 listOfData.add(chartData); // Inserimento nella lista
             }
+            sqlfinder.releaseConnection();
         } catch (SQLException e) {
             System.err.println("Qualcosa è andato storto...\n" + e.getMessage());
         }
-        sqlfinder.releaseConnection();
         return listOfData;
     }
 
@@ -187,16 +184,11 @@ public class EmotionManager implements EmotionManagerInterface {
                         res.getString("notes"));
                 listOfComments.add(commentSection); // inserimento nella lista
             }
+            sqlfinder.releaseConnection();
         } catch (SQLException e) {
             System.err.println("Qualcosa è andato storto...\n" + e.getMessage());
         }
-         sqlfinder.releaseConnection();
         return listOfComments;
     }
 
-    // CascasCreationAbomination 2.0
-    @Override
-    public ArrayList<CommentSection> getMyComments(String userId) {
-        throw new UnsupportedOperationException("Unimplemented method 'getMyComments'");
-    }
 }

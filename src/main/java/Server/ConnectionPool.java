@@ -1,6 +1,8 @@
 package Server;
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 
@@ -11,20 +13,25 @@ public class ConnectionPool {
 
     public static void initialize() {
         // Inizializza il pool di connessioni
-        dataSource = new HikariDataSource();
-
-        dataSource.setMaximumPoolSize(POOLSIZE);
-        dataSource.setConnectionTimeout(5000);
-        
         // Configura il pool di connessioni
-        dataSource.setJdbcUrl("jdbc:postgresql://localhost:5432/emotionalsongs");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("");
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/emotionalsongs");
+        config.setUsername("postgres");
+        config.setPassword("");
+        config.setMaximumPoolSize(POOLSIZE);
+        config.setConnectionTimeout(5000);
+        config.setConnectionTestQuery("SELECT 1");
+        config.setPoolName("EmotionalSongsPool");
+        config.setRegisterMbeans(true);
+
+        dataSource = new HikariDataSource(config);
     }
 
     public synchronized static Connection getConnection(){
         //ottengo la connessione dal poll 
         try {
+            //stampo il numero di connessioni attive
+            System.out.println("Active Connections: "+(dataSource.getHikariPoolMXBean().getActiveConnections()+1));
             return dataSource.getConnection();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -39,12 +46,15 @@ public class ConnectionPool {
         if(con != null){
             try {
                 con.close();
+                System.out.println("Connection released");
+                System.out.println("Active Connections: "+dataSource.getHikariPoolMXBean().getActiveConnections());
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.err.println("SQL Exception  :"+e.getSQLState()); 
             }
         }
     }
+
 
     public static void shutdown(){
         //chiudo il poll, alla chiusura dell'applicazione 

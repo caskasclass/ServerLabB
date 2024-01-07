@@ -286,22 +286,16 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         try {
             while (dbmanager.getRes().next()) { // cicla finchè ci sono risultati
                 ResultSet res = dbmanager.getRes();
-                System.out.println("Result set size " + res.getFetchSize());
-
                 // create TrackDetails and add it to the list
                 Track track = new Track(res.getString("track_id"), res.getString("name"), res.getInt("duration_ms"),
                         "Silence is golden", res.getString("album_name"), res.getString("album_img0"),
                         res.getString("album_img1"), res.getString("album_img2"));
                 topTracks.add(new TrackDetails(track, res.getString("album_id")));
             }
-            for (TrackDetails trackDetails : topTracks) {
-                System.out.println(trackDetails.track.getName() + " album id : " + trackDetails.albumId);
-            }
+           dbmanager.releaseConnection();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        System.out.println("topTracks size: " + topTracks.size());
-        dbmanager.releaseConnection();
         return topTracks;
     }
 
@@ -332,17 +326,15 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         // get the number of rows from the result set
         try {
             res.next();
-            System.out.println("Result set size " + res.toString());
             int count = res.getInt(1);
-            System.out.println("count: " + count);
+            dbmanager.releaseConnection();
+
             if (count > 0) {
-                dbmanager.releaseConnection();
                 return true;
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        dbmanager.releaseConnection();
         return false;
 
     }
@@ -388,7 +380,6 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         try {
             while (dbmanager.getRes().next()) { // cicla finchè ci sono risultati
                 ResultSet res = dbmanager.getRes();
-                System.out.println("Result set size " + res.getFetchSize());
 
                 // create TrackDetails and add it to the list
 
@@ -397,14 +388,11 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
                         "Silence is golden");
                 topAlbums.add(album);
             }
-            for (AlbumPreview albumDetails : topAlbums) {
-                System.out.println(albumDetails.getAlbumName());
-            }
+            dbmanager.releaseConnection();
+
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        System.out.println("topAlbums size: " + topAlbums.size());
-        dbmanager.releaseConnection();
         return topAlbums;
     }
 

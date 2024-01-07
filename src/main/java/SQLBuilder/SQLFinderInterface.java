@@ -36,4 +36,5 @@ public interface SQLFinderInterface {
     String getQuery();
 
     void releaseConnection();
+    
 }

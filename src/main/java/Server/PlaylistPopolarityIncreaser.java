@@ -4,7 +4,7 @@ import SQLBuilder.SQLInserter;
 import jars.*;
 
 public class PlaylistPopolarityIncreaser extends Thread {
-    private Playlist p;
+   private Playlist p;
     private SQLInserter sqlinserter;
 
     public PlaylistPopolarityIncreaser(Playlist p) {

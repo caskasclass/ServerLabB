@@ -116,6 +116,7 @@ public class AlbumFinder implements AlbumFinderInterface {
                 String album_id = this.dbmanager.getRes().getString("album_id"); // Ottenimento del valore dell'album_id
                 this.albumId.add(album_id); // Aggiunta alla lista
             }
+            dbmanager.releaseConnection();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -167,6 +168,7 @@ public class AlbumFinder implements AlbumFinderInterface {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
+            dbmanager.releaseConnection();
         }
         return this.res; // ritorno della lista di album
     }
