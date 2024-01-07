@@ -1,7 +1,7 @@
-<<<<<<< HEAD
 C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\SQLBuilder\SQLFinderInterface.java
 C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\Server\PlaylistPopularityIncreaser.java
 C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\SQLBuilder\SQLFinder.java
+C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\Server\ConnectionPool.java
 C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\Finder\EmotionManagerInterface.java
 C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\Finder\PlaylistManager.java
 C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\Server\Server.java
@@ -14,26 +14,6 @@ C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\Finder\SongFinderInterface.jav
 C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\Finder\AlbumFinder.java
 C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\Finder\EmotionManager.java
 C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\Server\PopularityIncreaser.java
+C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\Server\PlaylistPopolarityIncreaser.java
 C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\Finder\AlbumFinderInterface.java
 C:\Users\hp\Desktop\LabB\ServerLabB\src\main\java\Finder\PlaylistManagerInterface.java
-=======
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/Finder/SongFinder.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/UserManager/UserManagerInterface.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/Server/Server.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/UserManager/UserManager.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/SQLBuilder/SQLFinderInterface.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/SQLBuilder/SQLInserter.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/SQLBuilder/SQLInserterInterface.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/Server/ConnectionPool.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/Server/PopularityIncreaser.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/Finder/PlaylistManagerInterface.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/Finder/EmotionManagerInterface.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/Finder/AlbumFinder.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/Finder/SongFinderInterface.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/SQLBuilder/SQLFinder.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/Server/PlaylistPopolarityIncreaser.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/Finder/EmotionManager.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/Finder/PlaylistManager.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/Server/PlaylistPopularityIncreaser.java
-/Users/caska/Desktop/Università/Anno 2/Lab B/ServerLabB/ServerLabB/src/main/java/Finder/AlbumFinderInterface.java
->>>>>>> eb0b7ca80cba87672617e9dab82f8d7e8a7619b2

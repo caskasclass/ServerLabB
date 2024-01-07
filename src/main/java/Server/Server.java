@@ -320,7 +320,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         SQLFinder dbmanager = new SQLFinder();
         dbmanager.renewQuery();
         dbmanager.renewResultSet();
-        dbmanager.setQuery("count(*)", "emotions where track_id = " + trackid + "' and userid = '" + user_id + "'");
+        dbmanager.setQuery("count(*)", "emotions where track_id = '" + trackid + "' and userid = '" + user_id + "'");
         dbmanager.executeQuery();
         ResultSet res = dbmanager.getRes();
         // get the number of rows from the result set

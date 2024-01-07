@@ -15,9 +15,9 @@ public class ConnectionPool {
         // Inizializza il pool di connessioni
         // Configura il pool di connessioni
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/emotionalsongs");
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/LabDB");
         config.setUsername("postgres");
-        config.setPassword("");
+        config.setPassword("postgres");
         config.setMaximumPoolSize(POOLSIZE);
         config.setConnectionTimeout(5000);
         config.setConnectionTestQuery("SELECT 1");
