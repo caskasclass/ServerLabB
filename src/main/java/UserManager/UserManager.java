@@ -9,14 +9,16 @@ import jars.User;
 /**
  * Progetto laboratorio B: "Emotional Songs", anno 2022-2023
  * 
- * Classe che modella oggetti in grado di inserire e leggere dalla tabella
- * registrated_users.
  * 
  * @author Beatrice Bastianello, matricola 751864, VA
  * @author Lorenzo Barbieri , matricola 748695, VA
  * @author Filippo Storti , matricola 749195, VA
  * @author Nazar Viytyuk, matricola 748964, VA
  * @version 1.0
+ */
+/**
+ * Classe che modella oggetti in grado di inserire e leggere dalla tabella
+ * registrated_users.
  */
 public class UserManager implements UserManagerInterface {
 

@@ -23,6 +23,11 @@
             <artifactId>jars</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>java-dotenv</artifactId>
+            <version>5.2.2</version> <!-- Check for the latest version on Maven Central -->
+        </dependency>
     </dependencies>
     <build>
         <plugins>

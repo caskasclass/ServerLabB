@@ -5,7 +5,16 @@ import java.sql.SQLException;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-
+import io.github.cdimascio.dotenv.*;
+/**
+ * Progetto laboratorio B: "Emotional Songs", anno 2022-2023
+ * 
+ * @author Beatrice Bastianello, matricola 751864, VA
+ * @author Lorenzo Barbieri , matricola 748695, VA
+ * @author Filippo Storti , matricola 749195, VA
+ * @author Nazar Viytyuk, matricola 748964, VA
+ * @version 1.0
+ */
 /**
  * La classe ConnectionPool gestisce un pool di connessioni al database
  * utilizzando HikariCP.
@@ -28,6 +37,8 @@ public class ConnectionPool {
     private static HikariDataSource dataSource;
     private static final int POOLSIZE = 100;
 
+    
+
     /**
      * Inizializza il pool di connessioni con le impostazioni specificate.
      */
@@ -35,10 +46,11 @@ public class ConnectionPool {
     public static void initialize() {
         // Inizializza il pool di connessioni
         // Configura il pool di connessioni
+        Dotenv env = Dotenv.configure().filename("config.env").load();
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/EmotionalSongs");
-        config.setUsername("postgres");
-        config.setPassword("5640");
+        config.setJdbcUrl(env.get("DB_URL"));
+        config.setUsername(env.get("DB_USER"));
+        config.setPassword(env.get("DB_PASSWORD"));
         config.setMaximumPoolSize(POOLSIZE);
         config.setConnectionTimeout(5000);
         config.setConnectionTestQuery("SELECT 1");

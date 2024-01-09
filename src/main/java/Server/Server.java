@@ -22,19 +22,16 @@ import java.util.ArrayList;
  * @author Nazar Viytyuk, matricola 748964, VA
  * @version 1.0
  */
-public class Server extends UnicastRemoteObject implements ServerInterface {
-
     /**
-     * Il server consiste in un array di oggetti di tipo Server instanziati ognuno
-     * su una porta diversa a partire da 8080.
-     * Sono instanziati fino a 100 oggetti a cui il client può accedere tramite
-     * l'interfaccia ServerInterface.
-     * Il server implementa dei metodi che a loro volta consistono in dei servizi,
+     * Il server RMI implementa dei metodi che a loro volta consistono in dei servizi,
      * ogni servizio è eseguito da uno specifico oggetto, costrudendo
      * l'oggetto appropriato ed eseguendo il metodo più opportuno.
      * Per maggiori informazioni su ogni servizio si veda la documentazione apposita
      * di ogni classe.
      */
+public class Server extends UnicastRemoteObject implements ServerInterface {
+
+
 
     /**
      * Costruttore della classe Server.
@@ -302,8 +299,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
     /**
      * Metodo remoto per verificare se una traccia è stata valutata da un utente.
      *
-     * @param trackid ID della traccia.
-     * @param user_id ID dell'utente.
+     * @param arg0 traccia commentata
      * @return true se l'utente ha valutato la traccia, false altrimenti.
      * @throws RemoteException Lanciata in caso di errore nella gestione delle
      *                         operazioni remote.
@@ -408,7 +404,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 
     /**
      *
-     * @return ArrayList<String> - Lista degli utenti esistenti.
+     * @return ArrayList di String - Lista degli utenti esistenti.
      * @throws RemoteException Se si verifica un problema legato alla comunicazione
      *                         durante l'esecuzione del metodo.
      */
@@ -422,12 +418,8 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 
         ConnectionPool.initialize();
         try {
-            // ciclo per l'instanziazione dei vari oggetti su ogni porta che si trova
-            // nell'array PORT descritto nell'interfaccia ServerInterface
-            // for (int i = 0; i < PORT.length; i++) {
             Registry r = LocateRegistry.createRegistry(1099);
             r.rebind("SERVER", new Server());
-            // }
             // comunicazione dell'avvenuta creazione degli oggetti
             System.out.println("Server avviato correttamente");
             // ciclo infinito per l'utilizzo di ogni oggetto
