@@ -1,5 +1,6 @@
 package SQLBuilder;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 
 /**
@@ -25,4 +26,6 @@ public interface SQLInserterInterface {
     void setValues(ArrayList<String> ar);
 
     void updateTrackPopularity(String trackId);
+
+    void releaseConnection();
 }

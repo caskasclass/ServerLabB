@@ -3,6 +3,7 @@ package Finder;
 import java.util.ArrayList;
 
 import jars.ChartData;
+import jars.CommentSection;
 import jars.EmotionEvaluation;
 
 /**
@@ -24,5 +25,13 @@ public interface EmotionManagerInterface {
     void insertEmotions(EmotionEvaluation emotion);
     
     void setSearchCriteria(String searchCriteria);
+
+    ArrayList<CommentSection> getAllComments();
+
+
+
+    
+
+
     
 }
