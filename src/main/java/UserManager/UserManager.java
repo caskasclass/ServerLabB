@@ -112,9 +112,6 @@ public class UserManager implements UserManagerInterface {
         this.sqlinserter.setValues(values);
         this.sqlinserter.setQuery("registrated_users"); // Settaggio della query
         this.sqlinserter.executeQuery(); // Esecuzione della query
-        sqlinserter.releaseConnection();
-
-
     }
 
     /**
@@ -155,7 +152,6 @@ public class UserManager implements UserManagerInterface {
                     u = new User(userid, nome, cognome, cf, indirizzo, cap, citta, mail, this.searchCriteria[1]);
                 }
             }
-            sqlfinder.releaseConnection();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -199,7 +195,6 @@ public class UserManager implements UserManagerInterface {
             while (this.sqlfinder.getRes().next()) {
                 res.add(this.sqlfinder.getRes().getString("userid"));
             }
-            sqlfinder.releaseConnection();
             return res;
         } catch (SQLException e) {
             e.printStackTrace();

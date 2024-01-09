@@ -20,9 +20,7 @@ import jars.User;
  */
 
 /**
- * Gli oggetti modellati da questa classe si occupano della gestione delle
- * playlist all'interno del database, sia inserimento, sia rimozione che
- * ricerca.
+ * Gli oggetti modellati da questa classe si occupano della gestione delle playlist all'interno del database, sia inserimento, sia rimozione che ricerca.
  */
 public class PlaylistManager implements PlaylistManagerInterface {
 
@@ -39,9 +37,8 @@ public class PlaylistManager implements PlaylistManagerInterface {
 
     /**
      * Costruttore nel caso si voglia cercare a partire da un utente ed un titolo.
-     * 
      * @param title Titolo della playlist.
-     * @param user  ID dell'utente.
+     * @param user ID dell'utente.
      */
     public PlaylistManager(String title, String user) {
         this.sqlfinder = new SQLFinder();
@@ -70,9 +67,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
     }
 
     /**
-     * Costruttore nel caso si abbia già una playlist "attiva" e si vogliano trovare
-     * tutte le informazioni relative a quelle tracce.
-     * 
+     * Costruttore nel caso si abbia già una playlist "attiva" e si vogliano trovare tutte le informazioni relative a quelle tracce.
      * @param trackId Lista di trackId.
      */
     public PlaylistManager(ArrayList<String> trackId) {
@@ -85,9 +80,8 @@ public class PlaylistManager implements PlaylistManagerInterface {
 
     /**
      * Imposta i criteri di ricerca.
-     * 
      * @param title Titolo della playlist.
-     * @param user  ID dell'utente.
+     * @param user ID dell'utente.
      */
     @Override
     public void setSearchCriteria(String title, String user) {
@@ -97,7 +91,6 @@ public class PlaylistManager implements PlaylistManagerInterface {
 
     /**
      * Metodo per cercare una playlist.
-     * 
      * @return Playlist risultato.
      */
     @Override
@@ -111,7 +104,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
         this.sqlfinder.executeQuery(); // Esecuzione della query
         try {
             String img = null;
-
+            
             while (this.sqlfinder.getRes().next()) { // Ciclo finché ci sono risultati
                 String trackId = this.sqlfinder.getRes().getString("track_id");
                 img = this.sqlfinder.getRes().getString("image");// Ottenimento del trackId
@@ -119,7 +112,6 @@ public class PlaylistManager implements PlaylistManagerInterface {
             }
             // Costruzione della playlist risultato
             this.res = new Playlist(this.searchCriteria[0], this.trackId, img, this.searchCriteria[1]);
-            sqlfinder.releaseConnection();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -128,10 +120,9 @@ public class PlaylistManager implements PlaylistManagerInterface {
 
     /**
      * Ricerca di tutte le informazioni di una playlist.
-     * 
-     * @param ar    Lista di trackId.
+     * @param ar Lista di trackId.
      * @param begin Indice di inizio.
-     * @param end   Indice di fine.
+     * @param end Indice di fine.
      * @return Lista di tracce.
      */
     @Override
@@ -142,7 +133,6 @@ public class PlaylistManager implements PlaylistManagerInterface {
 
     /**
      * Metodo per creare una playlist.
-     * 
      * @param p Playlist da creare.
      */
     @Override
@@ -169,15 +159,12 @@ public class PlaylistManager implements PlaylistManagerInterface {
             this.sqlinserter.renewQuery();
             this.sqlinserter.setValues(values); // Settaggio della lista dei valori
             this.sqlinserter.setQuery("playlist"); // Settaggio della query con nome della tabella in cui inserire
-            this.sqlinserter.executeQuery();
-            this.sqlinserter.releaseConnection();
-             // Esecuzione della query
+            this.sqlinserter.executeQuery(); // Esecuzione della query
         }
     }
 
     /**
      * Metodo per ottenere tutte le playlist presenti nel database.
-     * 
      * @return Lista di playlist.
      */
     @Override
@@ -192,8 +179,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
             this.sqlfinder.setQuery("*", "playlist"); // Setteggio della query
             this.sqlfinder.executeQuery(); // Esecuzione della query
             while (this.sqlfinder.getRes().next()) { // Cicla finché ci sono risultati
-                // Ottenimento degli userid e del titolo della playlist che serviranno per la
-                // ricerca successiva
+                // Ottenimento degli userid e del titolo della playlist che serviranno per la ricerca successiva
                 this.searchCriteria = new String[] { this.sqlfinder.getRes().getString("userid"),
                         this.sqlfinder.getRes().getString("title") };
                 String img = this.sqlfinder.getRes().getString("image");
@@ -206,7 +192,6 @@ public class PlaylistManager implements PlaylistManagerInterface {
                             this.searchCriteria[0]));
                 }
             }
-            this.sqlfinder.releaseConnection();
             // Ritorno dei risultati
             return res;
         } catch (Exception e) {
@@ -215,8 +200,7 @@ public class PlaylistManager implements PlaylistManagerInterface {
         }
     }
 
-    // Metodo di servizio che controlla se è già presente la coppia userid + title è
-    // già presente nella lista passata
+    // Metodo di servizio che controlla se è già presente la coppia userid + title è già presente nella lista passata
     private boolean contains(ArrayList<String[]> ar, String[] s) {
         for (int i = 0; i < ar.size(); i++) {
             if (ar.get(i)[0].equals(s[0]) && ar.get(i)[1].equals(s[1])) {
@@ -234,18 +218,17 @@ public class PlaylistManager implements PlaylistManagerInterface {
             SQLFinder f = new SQLFinder();
             f.renewResultSet();
             f.setQuery("track_id", "playlist",
-                    "LOWER(title) = LOWER('" + title + "') AND LOWER(userid) = LOWER('" + userid + "');");
+                        "LOWER(title) = LOWER('" + title + "') AND LOWER(userid) = LOWER('" + userid + "');");
             f.executeQuery();
-            while (f.getRes().next()) {
+            System.out.println(f.getQuery());
+            while(f.getRes().next()) {
                 res.add(f.getRes().getString("track_id"));
             }
-            f.releaseConnection();
-            if (res.isEmpty()) {  
+            if(res.isEmpty()) {
                 return null;
             } else {
                 return res;
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -254,7 +237,6 @@ public class PlaylistManager implements PlaylistManagerInterface {
 
     /**
      * Metodo per l'eliminazione di una playlist.
-     * 
      * @param p Playlist da eliminare.
      */
     @Override
@@ -262,13 +244,11 @@ public class PlaylistManager implements PlaylistManagerInterface {
         this.sqlinserter.renewQuery();
         this.sqlinserter.delete("playlist", "userid = '" + p.getUser() + "' AND title = '" + p.getTitle() + "';");
         this.sqlinserter.executeQuery();
-        this.sqlinserter.releaseConnection();
     }
 
     /**
      * Metodo per l'eliminazione di una singola traccia da una playlist.
-     * 
-     * @param p       Playlist.
+     * @param p Playlist.
      * @param trackId Track ID.
      */
     @Override
@@ -277,6 +257,5 @@ public class PlaylistManager implements PlaylistManagerInterface {
         this.sqlinserter.delete("playlist",
                 "userid = '" + p.getUser() + "' AND title = '" + p.getTitle() + "' AND track_id = '" + trackId + "';");
         this.sqlinserter.executeQuery();
-        this.sqlinserter.releaseConnection();
     }
 }

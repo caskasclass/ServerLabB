@@ -18,7 +18,7 @@ import jars.Playlist;
  */
 
 public class PlaylistPopularityIncreaser extends Thread {
-   private Playlist p;
+    private Playlist p;
     private SQLInserter sqlinserter;
 
     public PlaylistPopularityIncreaser(Playlist p) {
