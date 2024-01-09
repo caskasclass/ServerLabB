@@ -2,9 +2,12 @@ package SQLBuilder;
 
 import java.sql.*;
 
-import java.util.ArrayList;
+import Server.ConnectionPool;
 
-import jars.Playlist;
+/**
+ *
+ * @author lorenzo
+ */
 
 /**
  * Progetto laboratorio B: "Emotional Songs", anno 2022-2023
@@ -52,17 +55,6 @@ public class SQLFinder implements SQLFinderInterface {
      * Utilizza un ciclo per tentare la connessione fino a quando non riesce.
      */
     public SQLFinder() {
-        boolean connected = false; // Flag per controllare la connessione
-
-        while (!connected) {
-            try {
-                this.conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/EmotionalSongs", "postgres",
-                        "5640");
-                connected = true; // Connessione riuscita, usciamo dal ciclo
-            } catch (SQLException e) {
-                System.err.println("Database connection failed, trying to reconnect");
-            }
-        }
         // Settaggio della query di base
         this.select = "SELECT ?\n";
         this.from = "FROM ?\n";
@@ -108,6 +100,7 @@ public class SQLFinder implements SQLFinderInterface {
         this.where = "WHERE ?\n";
     }
 
+    // metodo per l'esecuzione della query
     /**
      * Esegue la query e restituisce i risultati.
      * 
@@ -116,6 +109,12 @@ public class SQLFinder implements SQLFinderInterface {
     @Override
     public ResultSet executeQuery() {
         PreparedStatement ps;
+
+        // controllo di avvenuta connessione
+        do{ // cicla finchè non si connette
+            this.conn = ConnectionPool.getConnection();
+        }while(this.conn==null);
+    
         try {
             ps = this.conn.prepareStatement(select + from + where); // Costruzione della query
             this.res = ps.executeQuery(); // Esecuzione della query
@@ -182,4 +181,11 @@ public class SQLFinder implements SQLFinderInterface {
     public String getQuery() {
         return this.select + this.from + this.where;
     }
+
+    @Override
+    public void releaseConnection() {
+    if(this.conn!=null)
+       ConnectionPool.releaseConnection(this.conn);
+    }
+
 }

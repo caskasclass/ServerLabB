@@ -2,9 +2,10 @@ package Server;
 
 import java.rmi.*;
 import java.rmi.server.*;
-import java.rmi.registry.*;
-import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.rmi.registry.*;
+
 import jars.*;
 import UserManager.*;
 import Finder.*;
@@ -285,21 +286,16 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         try {
             while (dbmanager.getRes().next()) { // cicla finchè ci sono risultati
                 ResultSet res = dbmanager.getRes();
-                System.out.println("Result set size " + res.getFetchSize());
-
                 // create TrackDetails and add it to the list
                 Track track = new Track(res.getString("track_id"), res.getString("name"), res.getInt("duration_ms"),
                         "Silence is golden", res.getString("album_name"), res.getString("album_img0"),
                         res.getString("album_img1"), res.getString("album_img2"));
                 topTracks.add(new TrackDetails(track, res.getString("album_id")));
             }
-            for (TrackDetails trackDetails : topTracks) {
-                System.out.println(trackDetails.track.getName() + " album id : " + trackDetails.albumId);
-            }
+            dbmanager.releaseConnection();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        System.out.println("topTracks size: " + topTracks.size());
         return topTracks;
     }
 
@@ -313,6 +309,22 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
      *                         operazioni remote.
      */
     @Override
+    public ArrayList<CommentSection> getAllComments(Track arg0) throws RemoteException {
+        EmotionManager em = new EmotionManager(arg0);
+        return em.getAllComments();
+    }
+
+    /**
+     * Verifica se un determinato utente ha già valutato una traccia specifica.
+     *
+     * @param trackid Identificativo univoco della traccia da verificare.
+     * @param user_id Identificativo univoco dell'utente per il quale si vuole
+     *                verificare la valutazione.
+     * @return true se l'utente ha già valutato la traccia, false altrimenti.
+     * @throws RemoteException Lanciata in caso di errore di comunicazione remota.
+     */
+
+    @Override
     public boolean checkIfRated(String trackid, String user_id) throws RemoteException {
 
         SQLFinder dbmanager = new SQLFinder();
@@ -324,9 +336,9 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         // get the number of rows from the result set
         try {
             res.next();
-            System.out.println("Result set size " + res.toString());
             int count = res.getInt(1);
-            System.out.println("count: " + count);
+            dbmanager.releaseConnection();
+
             if (count > 0) {
                 return true;
             }
@@ -378,7 +390,6 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         try {
             while (dbmanager.getRes().next()) { // cicla finchè ci sono risultati
                 ResultSet res = dbmanager.getRes();
-                System.out.println("Result set size " + res.getFetchSize());
 
                 // create TrackDetails and add it to the list
 
@@ -387,13 +398,11 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
                         "Silence is golden");
                 topAlbums.add(album);
             }
-            for (AlbumPreview albumDetails : topAlbums) {
-                System.out.println(albumDetails.getAlbumName());
-            }
+            dbmanager.releaseConnection();
+
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        System.out.println("topAlbums size: " + topAlbums.size());
         return topAlbums;
     }
 
@@ -409,28 +418,24 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
         return u.findexExistingUsers();
     }
 
-    /**
-     *
-     * @param args Argomenti da riga di comando (non utilizzati in questa
-     *             implementazione).
-     * @throws RemoteException Se si verifica un problema legato alla comunicazione
-     *                         durante l'esecuzione del metodo.
-     */
     public static void main(String[] args) throws RemoteException {
+
+        ConnectionPool.initialize();
         try {
-            // Ciclo per l'istanziazione di oggetti su ogni porta specificata nell'array
-            // PORT di ServerInterface
-            for (int i = 0; i < PORT.length; i++) {
-                Registry r = LocateRegistry.createRegistry(ServerInterface.PORT[i]);
-                r.rebind("SERVER" + i, new Server());
-            }
+            // ciclo per l'instanziazione dei vari oggetti su ogni porta che si trova
+            // nell'array PORT descritto nell'interfaccia ServerInterface
+            // for (int i = 0; i < PORT.length; i++) {
+            Registry r = LocateRegistry.createRegistry(1099);
+            r.rebind("SERVER", new Server());
+            // }
+            // comunicazione dell'avvenuta creazione degli oggetti
             System.out.println("Server avviato correttamente");
-            // Ciclo infinito per l'utilizzo continuo di ciascun oggetto
+            // ciclo infinito per l'utilizzo di ogni oggetto
             for (;;) {
             }
         } catch (Exception e) {
-            // Gestione delle eccezioni in caso di fallimento dell'avvio del server
-            System.out.println("Avvio del server fallito");
+            // gestione dell'eccezione nel caso si verifichi
+            System.out.println("Server start failed");
             System.out.println(e.getMessage());
             System.exit(0);
         }
